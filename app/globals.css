@@ -696,6 +696,13 @@ select:focus-visible {
     width: 0;
     height: 0;
   }
+
+  .appShell:not(.signedOutShell) .scenarioList,
+  .appShell:not(.signedOutShell) .executionList,
+  .appShell:not(.signedOutShell) .evidenceObjects,
+  .appShell:not(.signedOutShell) .auditTimeline {
+    max-height: clamp(300px, 44vh, 530px);
+  }
 }
 
 .stageIntro {
@@ -1077,6 +1084,10 @@ select:focus-visible {
 .workflowBar,
 .featureList,
 .scenarioList,
+.executionList,
+.evidenceObjects,
+.auditTimeline,
+.gherkinEditor,
 .resultTable {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -1085,6 +1096,10 @@ select:focus-visible {
 .workflowBar::-webkit-scrollbar,
 .featureList::-webkit-scrollbar,
 .scenarioList::-webkit-scrollbar,
+.executionList::-webkit-scrollbar,
+.evidenceObjects::-webkit-scrollbar,
+.auditTimeline::-webkit-scrollbar,
+.gherkinEditor::-webkit-scrollbar,
 .resultTable::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -1287,6 +1302,14 @@ select:focus-visible {
 .scenarioList {
   max-height: 530px;
   overflow: auto;
+}
+
+.scenarioNavigator,
+.executionBoard,
+.evidencePanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .scenarioRow {
@@ -1522,7 +1545,10 @@ select:focus-visible {
 }
 
 .executionList {
+  max-height: 430px;
   margin-top: var(--space-4);
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .executionRow {
@@ -1675,7 +1701,10 @@ select:focus-visible {
 }
 
 .evidenceObjects {
+  max-height: 430px;
   margin-top: var(--space-4);
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .evidenceObjects div {
@@ -1701,7 +1730,10 @@ select:focus-visible {
 }
 
 .auditTimeline {
+  max-height: 430px;
   margin-top: var(--space-4);
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .auditTimeline div {
