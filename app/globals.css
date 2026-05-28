@@ -214,9 +214,11 @@ select:focus-visible {
   flex: 0 0 auto;
   min-height: 42px;
   padding: 5px 10px 5px 5px;
+  color: #f4f9ff;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
+  text-align: left;
 }
 
 .sessionBlock > span {
@@ -243,6 +245,136 @@ select:focus-visible {
   color: #c9e1f4;
   font-size: 11px;
   font-style: normal;
+}
+
+.sessionMenuWrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.sessionChevron {
+  color: #c9e1f4;
+  transition: transform 160ms ease;
+}
+
+.sessionChevron.open {
+  transform: rotate(180deg);
+}
+
+.sessionMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 80;
+  width: 236px;
+  padding: 6px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.sessionMenu::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 22px;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+
+.sessionMenuHeader {
+  display: grid;
+  gap: 2px;
+  padding: 9px 10px 10px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.sessionMenuHeader strong {
+  font-size: 13px;
+}
+
+.sessionMenuHeader span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sessionMenu button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 38px;
+  padding: 0 10px;
+  color: var(--navy);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.sessionMenu button:hover {
+  background: var(--blue-soft);
+}
+
+.sessionMenu button.dangerMenuItem {
+  color: var(--red);
+}
+
+.signedOutShell {
+  min-height: 100vh;
+}
+
+.authHeader {
+  position: relative;
+  top: auto;
+}
+
+.loginShell {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 104px);
+  padding: clamp(28px, 5vw, 72px);
+}
+
+.loginPanel {
+  width: min(460px, 100%);
+  padding: clamp(24px, 4vw, 38px);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.loginIcon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-4);
+  color: var(--blue);
+  background: var(--blue-soft);
+  border: 1px solid #bdddf2;
+  border-radius: 999px;
+}
+
+.loginPanel h2 {
+  margin: var(--space-2) 0 0;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.02;
+}
+
+.loginPanel p {
+  margin: var(--space-4) 0 var(--space-6);
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .iconButton {
@@ -711,6 +843,38 @@ select:focus-visible {
   margin-top: var(--space-4);
 }
 
+.emptySourceState {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  color: var(--muted);
+  background: var(--field);
+  border: 1px dashed var(--line);
+  border-radius: 7px;
+}
+
+.emptySourceState svg {
+  flex: 0 0 auto;
+  color: var(--blue);
+}
+
+.emptySourceState strong,
+.emptySourceState span {
+  display: block;
+}
+
+.emptySourceState strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.emptySourceState span {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .documentRow {
   gap: var(--space-3);
   min-width: 0;
@@ -800,6 +964,14 @@ select:focus-visible {
   gap: var(--space-2);
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+.panelHeadingActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .searchBox {

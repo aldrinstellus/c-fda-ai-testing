@@ -8,6 +8,7 @@ import {
   BarChart3,
   Check,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   ClipboardCheck,
   Clock3,
@@ -21,16 +22,19 @@ import {
   History,
   Layers3,
   LockKeyhole,
+  LogOut,
   Pause,
   Play,
   RefreshCw,
   RotateCcw,
   Search,
+  Settings,
   ShieldCheck,
   Sparkles,
   TerminalSquare,
   Trash2,
   UploadCloud,
+  UserRound,
   XCircle
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -63,6 +67,11 @@ const stageIcons: Record<StageId, LucideIcon> = {
   reports: BarChart3
 };
 
+const defaultManualFeature = "Reviewer-facing evidence export for failed Agent 2 steps.";
+const defaultContext =
+  "Prioritize explicit approval governance, stale test impact, trace links, and audit-ready evidence capture.";
+const supportedSourceExtensions = [".pdf", ".md", ".markdown", ".zip", ".html", ".htm", ".doc", ".docx", ".txt"];
+
 const scenarioStatusOptions: ScenarioStatus[] = ["Approved", "Needs Revision", "Rejected"];
 
 function cls(...classes: Array<string | false | null | undefined>) {
@@ -82,14 +91,17 @@ function getInitialDecisions(): Record<string, ScenarioDecision> {
 }
 
 export function FdaAiTestingApp() {
+  const [isSignedIn, setIsSignedIn] = useState(true);
+  const [sessionMenuOpen, setSessionMenuOpen] = useState(false);
   const [activeStage, setActiveStage] = useState<StageId>("trigger");
   const [selectedFeatures, setSelectedFeatures] = useState<Set<string>>(
     () => new Set(featureCandidates.filter((feature) => feature.selected).map((feature) => feature.id))
   );
-  const [manualFeature, setManualFeature] = useState("Reviewer-facing evidence export for failed Agent 2 steps.");
-  const [context, setContext] = useState(
-    "Prioritize explicit approval governance, stale test impact, trace links, and audit-ready evidence capture."
+  const [stagedDocumentNames, setStagedDocumentNames] = useState<Set<string>>(
+    () => new Set(sourceDocuments.map((document) => document.name))
   );
+  const [manualFeature, setManualFeature] = useState(defaultManualFeature);
+  const [context, setContext] = useState(defaultContext);
   const [agentOneStarted, setAgentOneStarted] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>(generatedScenarios[0].id);
@@ -108,13 +120,14 @@ export function FdaAiTestingApp() {
   const selectedScenario =
     generatedScenarios.find((scenario) => scenario.id === selectedScenarioId) ?? generatedScenarios[0];
   const activeStageConfig = workflowStages.find((stage) => stage.id === activeStage) ?? workflowStages[0];
+  const stagedDocuments = sourceDocuments.filter((document) => stagedDocumentNames.has(document.name));
   const selectedFeatureCount = selectedFeatures.size;
   const approvedCount = Object.values(decisions).filter((decision) => decision.status === "Approved").length;
   const blockedDecisionCount = Object.values(decisions).filter((decision) => decision.status !== "Approved").length;
   const commentMissingCount = Object.values(decisions).filter(
     (decision) => decision.status !== "Approved" && decision.comment.trim().length === 0
   ).length;
-  const canGenerate = selectedFeatureCount > 0 && sourceDocuments.some((document) => document.progress > 0);
+  const canGenerate = selectedFeatureCount > 0 && stagedDocuments.some((document) => document.progress > 0);
   const canExecute = approvedCount > 0 && commentMissingCount === 0 && approvalChecked;
   const coverage = 84;
   const passRate = 91;
@@ -147,6 +160,57 @@ export function FdaAiTestingApp() {
       }
       return next;
     });
+  }
+
+  function resetRunSession() {
+    setActiveStage("trigger");
+    setSelectedFeatures(new Set(featureCandidates.filter((feature) => feature.selected).map((feature) => feature.id)));
+    setStagedDocumentNames(new Set(sourceDocuments.map((document) => document.name)));
+    setManualFeature(defaultManualFeature);
+    setContext(defaultContext);
+    setAgentOneStarted(false);
+    setIsGenerating(false);
+    setSelectedScenarioId(generatedScenarios[0].id);
+    setScenarioDrafts(Object.fromEntries(generatedScenarios.map((scenario) => [scenario.id, scenario.gherkin])));
+    setDecisions(getInitialDecisions());
+    setApprovalChecked(false);
+    setExecutionStarted(false);
+    setExecutionPaused(false);
+    setEvidenceTab("evidence");
+    setSelectedEvidence("SCN-036");
+    setAuditSearch("");
+  }
+
+  function signOut() {
+    setSessionMenuOpen(false);
+    resetRunSession();
+    setIsSignedIn(false);
+    addToast("info", "Reviewer session cleared.");
+  }
+
+  function signIn() {
+    resetRunSession();
+    setIsSignedIn(true);
+    addToast("success", "Reviewer session started inside FDA workspace.");
+  }
+
+  function handleSourceSelection(files: FileList | null) {
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    const unsupportedFile = Array.from(files).find((file) => {
+      const lowerName = file.name.toLowerCase();
+      return !supportedSourceExtensions.some((extension) => lowerName.endsWith(extension));
+    });
+
+    if (unsupportedFile) {
+      addToast("error", `${unsupportedFile.name} is not a supported source format.`);
+      return;
+    }
+
+    setStagedDocumentNames(new Set(sourceDocuments.map((document) => document.name)));
+    addToast("success", "Selected files staged for parsing.");
   }
 
   function startGeneration() {
@@ -301,10 +365,23 @@ export function FdaAiTestingApp() {
               <span className="eyebrow">1. Source package</span>
               <h3>Ingest controlled requirements</h3>
             </div>
-            <span className="secureBadge">
-              <LockKeyhole size={14} />
-              FDA network only
-            </span>
+            <div className="panelHeadingActions">
+              <button
+                className="textButton"
+                type="button"
+                disabled={stagedDocuments.length === 0}
+                onClick={() => {
+                  setStagedDocumentNames(new Set());
+                  addToast("info", "Source list cleared for this session.");
+                }}
+              >
+                Clear all
+              </button>
+              <span className="secureBadge">
+                <LockKeyhole size={14} />
+                FDA network only
+              </span>
+            </div>
           </div>
 
           <div
@@ -312,6 +389,7 @@ export function FdaAiTestingApp() {
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
               event.preventDefault();
+              setStagedDocumentNames(new Set(sourceDocuments.map((document) => document.name)));
               addToast("success", "Source package staged for Agent 1 parsing.");
             }}
           >
@@ -327,13 +405,22 @@ export function FdaAiTestingApp() {
                 className="fileInput"
                 type="file"
                 multiple
-                onChange={() => addToast("success", "Selected files staged for parsing.")}
+                onChange={(event) => handleSourceSelection(event.currentTarget.files)}
               />
             </label>
           </div>
 
           <div className="documentList">
-            {sourceDocuments.map((document) => (
+            {stagedDocuments.length === 0 && (
+              <div className="emptySourceState">
+                <FileText size={18} />
+                <div>
+                  <strong>No source files staged</strong>
+                  <span>Upload a supported source package before Agent 1 can generate tests.</span>
+                </div>
+              </div>
+            )}
+            {stagedDocuments.map((document) => (
               <div className="documentRow" key={document.name}>
                 <FileText size={18} />
                 <div>
@@ -348,7 +435,19 @@ export function FdaAiTestingApp() {
                 <em className={cls("statusChip", document.status === "Parsed" || document.status === "Indexed" ? "good" : "neutral")}>
                   {document.status}
                 </em>
-                <button className="iconButton" type="button" aria-label={`Remove ${document.name}`}>
+                <button
+                  className="iconButton"
+                  type="button"
+                  aria-label={`Remove ${document.name}`}
+                  onClick={() => {
+                    setStagedDocumentNames((current) => {
+                      const next = new Set(current);
+                      next.delete(document.name);
+                      return next;
+                    });
+                    addToast("info", `${document.name} removed from this source package.`);
+                  }}
+                >
                   <Trash2 size={16} />
                 </button>
               </div>
@@ -371,7 +470,7 @@ export function FdaAiTestingApp() {
                 Select all
               </button>
               <button className="textButton" type="button" onClick={() => setSelectedFeatures(new Set())}>
-                Clear
+                Deselect all
               </button>
             </div>
           </div>
@@ -858,6 +957,64 @@ export function FdaAiTestingApp() {
     return renderReports();
   }
 
+  if (!isSignedIn) {
+    return (
+      <main className="appShell signedOutShell">
+        <div className="govBanner">
+          <span className="flagMark">US</span>
+          <span>Controlled FDA/CDER review environment. Sign in to access the governed testing workspace.</span>
+        </div>
+
+        <header className="appHeader authHeader">
+          <div className="brandBlock">
+            <img
+              className="fdaMark"
+              src="/gov-fda-new-white.svg"
+              alt="U.S. Food and Drug Administration"
+              width={545}
+              height={114}
+            />
+            <span className="brandDivider" aria-hidden="true" />
+            <div className="brandCopy">
+              <h1>AI Agentic Testing</h1>
+              <p>Center for Drug Evaluation and Research</p>
+            </div>
+          </div>
+          <span className="boundaryPill">
+            <ShieldCheck size={15} />
+            FDA workspace
+          </span>
+        </header>
+
+        <section className="loginShell" aria-labelledby="login-title">
+          <div className="loginPanel">
+            <span className="loginIcon">
+              <UserRound size={24} />
+            </span>
+            <span className="eyebrow">Reviewer access</span>
+            <h2 id="login-title">Sign in to continue</h2>
+            <p>Mocked session entry for the governed FDA/CDER review workspace. Signing in starts a clean run session.</p>
+            <button className="primaryButton" type="button" onClick={signIn}>
+              <UserRound size={17} />
+              Sign in as reviewer
+            </button>
+          </div>
+        </section>
+
+        <div className="toastStack" aria-live="polite">
+          {toasts.map((toast) => (
+            <div className={cls("toast", toast.tone)} key={toast.id}>
+              {toast.tone === "success" && <CheckCircle2 size={16} />}
+              {toast.tone === "error" && <XCircle size={16} />}
+              {toast.tone === "info" && <Activity size={16} />}
+              <span>{toast.text}</span>
+            </div>
+          ))}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="appShell">
       <div className="govBanner">
@@ -886,12 +1043,55 @@ export function FdaAiTestingApp() {
             <ShieldCheck size={15} />
             FDA workspace
           </span>
-          <div className="sessionBlock" aria-label="Current reviewer">
-            <span>AD</span>
-            <div>
-              <strong>Reviewer</strong>
-              <em>FDA-RUN-009</em>
-            </div>
+          <div className="sessionMenuWrap">
+            <button
+              className="sessionBlock"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={sessionMenuOpen}
+              onClick={() => setSessionMenuOpen((current) => !current)}
+            >
+              <span>AD</span>
+              <div>
+                <strong>Reviewer</strong>
+                <em>FDA-RUN-009</em>
+              </div>
+              <ChevronDown className={cls("sessionChevron", sessionMenuOpen && "open")} size={14} />
+            </button>
+            {sessionMenuOpen && (
+              <div className="sessionMenu" role="menu" aria-label="Reviewer menu">
+                <div className="sessionMenuHeader">
+                  <strong>Aldrin Dharmapuri</strong>
+                  <span>Reviewer / FDA-RUN-009</span>
+                </div>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setSessionMenuOpen(false);
+                    addToast("info", "Reviewer settings are mocked for this app run.");
+                  }}
+                >
+                  <Settings size={15} />
+                  Settings
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setSessionMenuOpen(false);
+                    addToast("info", "Session details retained inside FDA workspace.");
+                  }}
+                >
+                  <UserRound size={15} />
+                  Session details
+                </button>
+                <button className="dangerMenuItem" type="button" role="menuitem" onClick={signOut}>
+                  <LogOut size={15} />
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
