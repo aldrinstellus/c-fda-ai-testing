@@ -1127,10 +1127,9 @@ export function FdaAiTestingApp() {
 
         <section className="stageCanvas" aria-labelledby="stage-title">
           <div className="stageIntro">
-            <div>
+            <div className="stageTitleBlock">
               <span className="eyebrow">Operational workflow</span>
               <h2 id="stage-title">{activeStageConfig.label}</h2>
-              <p>{activeStageConfig.summary}</p>
             </div>
             <div className="stageStatus">
               <span>
@@ -1142,6 +1141,7 @@ export function FdaAiTestingApp() {
                 Last source sync 10:58
               </span>
             </div>
+            <p>{activeStageConfig.summary}</p>
           </div>
 
           {renderActiveStage()}

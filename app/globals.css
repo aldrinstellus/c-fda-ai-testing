@@ -711,12 +711,21 @@ select:focus-visible {
 }
 
 .stageIntro {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-6);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title status"
+    "description description";
+  column-gap: var(--space-6);
+  row-gap: var(--space-3);
+  align-items: start;
   padding-bottom: var(--space-5);
   border-bottom: 1px solid var(--line-soft);
+}
+
+.stageTitleBlock {
+  grid-area: title;
+  min-width: 0;
 }
 
 .stageIntro h2 {
@@ -727,14 +736,16 @@ select:focus-visible {
 }
 
 .stageIntro p {
+  grid-area: description;
   max-width: 760px;
-  margin-top: var(--space-3);
   color: var(--muted);
   font-size: 15px;
   line-height: 1.52;
+  white-space: nowrap;
 }
 
 .stageStatus {
+  grid-area: status;
   flex: 0 0 auto;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -1861,7 +1872,22 @@ select:focus-visible {
 }
 
 @media (max-width: 960px) {
-  .stageIntro,
+  .stageIntro {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "description"
+      "status";
+  }
+
+  .stageIntro p {
+    white-space: normal;
+  }
+
+  .stageStatus {
+    justify-content: flex-start;
+  }
+
   .reviewSummary {
     align-items: flex-start;
     flex-direction: column;
