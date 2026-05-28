@@ -15,3 +15,5 @@ pnpm-debug.log*
 .chrome-*
 app-preview*.png
 app-*-preview.png
+
+.vercel
