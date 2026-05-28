@@ -361,9 +361,12 @@ export function FdaAiTestingApp() {
       <div className="triggerScreen">
         <section className="workPanel sourcePanel">
           <div className="panelHeading">
-            <div>
-              <span className="eyebrow">1. Source package</span>
-              <h3>Ingest controlled requirements</h3>
+            <div className="triggerStepHeader">
+              <span className="triggerStepNumber">01</span>
+              <div>
+                <span className="eyebrow">Source package</span>
+                <h3>Ingest controlled requirements</h3>
+              </div>
             </div>
             <div className="panelHeadingActions">
               <button
@@ -457,9 +460,12 @@ export function FdaAiTestingApp() {
 
         <section className="workPanel scopePanel">
           <div className="panelHeading">
-            <div>
-              <span className="eyebrow">2. Feature scope</span>
-              <h3>{selectedFeatureCount} selected for generation</h3>
+            <div className="triggerStepHeader">
+              <span className="triggerStepNumber">02</span>
+              <div>
+                <span className="eyebrow">Feature scope</span>
+                <h3>{selectedFeatureCount} selected for generation</h3>
+              </div>
             </div>
             <div className="buttonCluster">
               <button
@@ -507,8 +513,13 @@ export function FdaAiTestingApp() {
 
         <section className="generationDock">
           <div className="generationSummary">
-            <span className="eyebrow">3. Generation job</span>
-            <h3>Agent 1 preflight</h3>
+            <div className="triggerStepHeader">
+              <span className="triggerStepNumber">03</span>
+              <div>
+                <span className="eyebrow">Generation job</span>
+                <h3>Agent 1 preflight</h3>
+              </div>
+            </div>
             <p>Grammar validation, dedupe, coverage analysis, version tracking, and stale test impact detection are enabled.</p>
           </div>
           <label className="fieldStack contextField generationContext">
