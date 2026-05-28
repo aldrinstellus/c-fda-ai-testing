@@ -506,13 +506,13 @@ export function FdaAiTestingApp() {
         </section>
 
         <section className="generationDock">
-          <div>
+          <div className="generationSummary">
             <span className="eyebrow">3. Generation job</span>
             <h3>Agent 1 preflight</h3>
             <p>Grammar validation, dedupe, coverage analysis, version tracking, and stale test impact detection are enabled.</p>
           </div>
-          <label className="fieldStack contextField">
-            Additional Context / Instructions (optional)
+          <label className="fieldStack contextField generationContext">
+            Additional context (optional)
             <textarea value={context} onChange={(event) => setContext(event.target.value)} />
           </label>
           <div className="consoleBlock">
@@ -531,7 +531,7 @@ export function FdaAiTestingApp() {
           </div>
           <button className="primaryButton" type="button" disabled={!canGenerate || isGenerating} onClick={startGeneration}>
             {isGenerating ? <RefreshCw className="spin" size={17} /> : <Sparkles size={17} />}
-            Generate Gherkin Test Cases
+            Generate scenarios
           </button>
         </section>
       </div>

@@ -631,6 +631,7 @@ select:focus-visible {
 
 .stageCanvas {
   min-width: 0;
+  overflow-x: hidden;
   padding: clamp(18px, 2.3vw, 30px);
   box-shadow: var(--shadow);
 }
@@ -703,6 +704,10 @@ select:focus-visible {
   .appShell:not(.signedOutShell) .auditTimeline {
     max-height: clamp(300px, 44vh, 530px);
   }
+
+  .appShell:not(.signedOutShell) .featureList {
+    max-height: clamp(300px, 38vh, 360px);
+  }
 }
 
 .stageIntro {
@@ -764,7 +769,8 @@ select:focus-visible {
 .reportsScreen {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-  gap: var(--space-5);
+  align-items: start;
+  gap: clamp(16px, 1.8vw, 22px);
   margin-top: var(--space-6);
 }
 
@@ -788,10 +794,33 @@ select:focus-visible {
 .generationDock {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(210px, 0.85fr) minmax(220px, 1fr) minmax(210px, 0.8fr) minmax(180px, 0.7fr);
-  align-items: end;
-  gap: var(--space-5);
+  grid-template-columns: minmax(220px, 0.86fr) minmax(300px, 1fr);
+  grid-template-areas:
+    "summary context"
+    "console action";
+  align-items: stretch;
+  gap: var(--space-4);
   background: #f8fbfe;
+}
+
+.generationSummary {
+  grid-area: summary;
+  min-width: 0;
+}
+
+.generationContext {
+  grid-area: context;
+  min-width: 0;
+}
+
+.generationDock .consoleBlock {
+  grid-area: console;
+  min-width: 0;
+  min-height: 88px;
+}
+
+.generationDock .primaryButton {
+  grid-area: action;
 }
 
 .panelHeading {
@@ -885,8 +914,10 @@ select:focus-visible {
 }
 
 .generationDock .primaryButton {
-  width: 100%;
-  min-height: 58px;
+  width: min(100%, 280px);
+  min-height: 54px;
+  justify-self: end;
+  align-self: center;
   line-height: 1.12;
   text-align: center;
   white-space: normal;
@@ -1180,6 +1211,13 @@ select:focus-visible {
   border-radius: 7px;
 }
 
+.fieldStack textarea,
+.fieldStack input {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
 .fieldStack textarea {
   min-height: 92px;
   padding: var(--space-3);
@@ -1196,11 +1234,13 @@ select:focus-visible {
 }
 
 .contextField textarea {
-  min-height: 74px;
+  min-height: 92px;
+  resize: none;
 }
 
 .consoleBlock {
   display: grid;
+  align-content: center;
   gap: var(--space-2);
   padding: var(--space-3);
   color: #d5e9f8;
@@ -1872,6 +1912,29 @@ select:focus-visible {
   .editorShell,
   .decisionPanel {
     grid-template-columns: 1fr;
+  }
+
+  .generationDock {
+    grid-template-areas:
+      "summary"
+      "context"
+      "console"
+      "action";
+  }
+
+  .generationDock .primaryButton {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .featureList,
+  .scenarioList,
+  .executionList,
+  .evidenceObjects,
+  .auditTimeline {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
   }
 
   .reportMetrics,
