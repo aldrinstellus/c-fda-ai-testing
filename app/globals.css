@@ -33,11 +33,13 @@
 }
 
 html {
+  height: 100%;
   min-width: 320px;
   background: #edf3f8;
 }
 
 body {
+  min-height: 100%;
   margin: 0;
   color: var(--ink);
   background:
@@ -484,6 +486,7 @@ select:focus-visible {
   display: grid;
   grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
   gap: var(--space-6);
+  align-items: start;
   width: min(1600px, 100%);
   margin: 0 auto;
   padding: clamp(18px, 2.4vw, 36px);
@@ -630,6 +633,69 @@ select:focus-visible {
   min-width: 0;
   padding: clamp(18px, 2.3vw, 30px);
   box-shadow: var(--shadow);
+}
+
+@media (min-width: 961px) {
+  body {
+    overflow: hidden;
+  }
+
+  .appShell:not(.signedOutShell) {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .appShell:not(.signedOutShell) .govBanner,
+  .appShell:not(.signedOutShell) .appHeader,
+  .appShell:not(.signedOutShell) .workflowBar {
+    flex: 0 0 auto;
+  }
+
+  .appShell:not(.signedOutShell) .appHeader,
+  .appShell:not(.signedOutShell) .workflowBar {
+    position: relative;
+    top: auto;
+  }
+
+  .appShell:not(.signedOutShell) .workflowBar {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .appShell:not(.signedOutShell) .workflowBar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .appShell:not(.signedOutShell) .productShell {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    align-items: stretch;
+    padding-top: clamp(16px, 2vw, 24px);
+    padding-bottom: clamp(16px, 2vw, 24px);
+  }
+
+  .appShell:not(.signedOutShell) .runRail,
+  .appShell:not(.signedOutShell) .stageCanvas {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .appShell:not(.signedOutShell) .runRail::-webkit-scrollbar,
+  .appShell:not(.signedOutShell) .stageCanvas::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 .stageIntro {
@@ -1006,6 +1072,23 @@ select:focus-visible {
   margin-top: var(--space-4);
   overflow: auto;
   padding-right: 2px;
+}
+
+.workflowBar,
+.featureList,
+.scenarioList,
+.resultTable {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.workflowBar::-webkit-scrollbar,
+.featureList::-webkit-scrollbar,
+.scenarioList::-webkit-scrollbar,
+.resultTable::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .featureChoice {
@@ -1681,17 +1764,23 @@ select:focus-visible {
 
 @media (max-width: 1240px) {
   .workflowBar {
-    top: 68px;
     overflow-x: auto;
     grid-template-columns: repeat(4, minmax(206px, 1fr));
   }
 
-  .productShell {
+  .triggerScreen,
+  .approvalScreen,
+  .reportsScreen {
     grid-template-columns: 1fr;
   }
 
-  .runRail {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .reviewScreen {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "summary"
+      "nav"
+      "editor"
+      "ready";
   }
 
   .generationDock {
@@ -1726,12 +1815,17 @@ select:focus-visible {
     padding: 0;
   }
 
+  .productShell,
   .runRail,
   .triggerScreen,
   .approvalScreen,
   .reportsScreen,
   .reviewScreen {
     grid-template-columns: 1fr;
+  }
+
+  .stageCanvas {
+    order: -1;
   }
 
   .reviewScreen {
