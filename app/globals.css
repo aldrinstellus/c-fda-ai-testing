@@ -97,7 +97,7 @@ button:disabled {
   top: 0;
   z-index: 20;
   display: grid;
-  grid-template-columns: minmax(300px, 0.85fr) minmax(420px, 1.2fr) minmax(250px, 0.55fr);
+  grid-template-columns: minmax(380px, 0.95fr) minmax(420px, 1.2fr) minmax(250px, 0.55fr);
   align-items: stretch;
   gap: 18px;
   padding: 18px clamp(16px, 3vw, 34px);
@@ -154,16 +154,12 @@ button:disabled {
 }
 
 .fdaMark {
-  display: grid;
+  display: block;
   flex: 0 0 auto;
-  place-items: center;
-  width: 68px;
+  width: clamp(138px, 10vw, 180px);
   height: 46px;
-  color: var(--blue);
-  background: var(--surface);
-  border-radius: 6px;
-  font-size: 19px;
-  font-weight: 900;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .workflowStepper {

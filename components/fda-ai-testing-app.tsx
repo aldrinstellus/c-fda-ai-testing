@@ -722,7 +722,13 @@ export function FdaAiTestingApp() {
 
       <header className="topBar">
         <div className="brandBlock">
-          <div className="fdaMark">FDA</div>
+          <img
+            className="fdaMark"
+            src="/gov-fda-new-white.svg"
+            alt="U.S. Food and Drug Administration"
+            width={545}
+            height={114}
+          />
           <div>
             <p>Center for Drug Evaluation and Research</p>
             <h1>AI Agentic Testing</h1>
