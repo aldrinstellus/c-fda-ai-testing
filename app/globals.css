@@ -713,6 +713,7 @@ select:focus-visible {
   .appShell:not(.signedOutShell) .featureList {
     max-height: clamp(300px, 38vh, 360px);
   }
+
 }
 
 .stageIntro {
@@ -1491,11 +1492,14 @@ select:focus-visible {
 .readinessPanel {
   grid-area: ready;
   display: grid;
-  grid-template-columns: minmax(340px, 1fr) minmax(260px, 0.72fr) minmax(280px, 0.72fr);
+  grid-template-columns: minmax(0, 1fr) minmax(310px, 0.46fr);
+  grid-template-areas:
+    "status gate"
+    "manifest gate";
   align-items: stretch;
-  gap: clamp(18px, 2.2vw, 30px);
+  gap: clamp(18px, 2.2vw, 30px) clamp(22px, 3vw, 42px);
   background:
-    linear-gradient(90deg, rgba(232, 244, 252, 0.78), rgba(255, 255, 255, 0.94)),
+    linear-gradient(105deg, rgba(232, 244, 252, 0.72), rgba(255, 255, 255, 0.96) 54%),
     #f8fbfe;
 }
 
@@ -1507,11 +1511,19 @@ select:focus-visible {
   border-color: #ead68b;
 }
 
-.readinessStatus {
+.readinessPanel.attention .readinessIcon {
+  color: var(--amber);
+  background: var(--amber-soft);
+  border-color: #ead68b;
+}
+
+.readinessStatusBlock {
+  grid-area: status;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-3);
   align-content: start;
+  align-items: start;
   min-width: 0;
 }
 
@@ -1528,95 +1540,92 @@ select:focus-visible {
 
 .readinessCopy {
   display: grid;
-  gap: 7px;
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .readinessPanel strong {
-  font-size: clamp(20px, 1.55vw, 25px);
-  line-height: 1.05;
+  font-size: clamp(22px, 1.8vw, 28px);
+  line-height: 1.08;
 }
 
 .readinessPanel p {
   color: var(--muted);
-  font-size: 13px;
+  max-width: 64ch;
+  font-size: 14px;
   line-height: 1.45;
 }
 
-.readinessPanel p b {
-  color: var(--ink);
-}
-
-.readinessProgress {
+.readinessManifest {
+  grid-area: manifest;
   display: grid;
-  align-content: center;
   gap: var(--space-3);
   min-width: 0;
-  padding: 0 clamp(16px, 2vw, 26px);
-  border-left: 1px solid var(--line-soft);
-  border-right: 1px solid var(--line-soft);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-soft);
 }
 
-.readinessProgressHeader,
-.readinessStats {
+.manifestHeader {
   display: flex;
-  align-items: center;
-}
-
-.readinessProgressHeader {
+  align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
-  color: var(--navy);
+  min-width: 0;
+}
+
+.manifestHeader span {
+  color: var(--muted);
   font-size: 12px;
   font-weight: 900;
+  text-transform: uppercase;
 }
 
-.readinessProgressHeader b {
-  color: var(--ink);
-  font-size: 20px;
-  line-height: 1;
-}
-
-.readinessTrack {
-  width: 100%;
-  height: 9px;
-  overflow: hidden;
-  background: #dceaf4;
-  border-radius: 999px;
-}
-
-.readinessTrack span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--blue), #1f7a43);
-  border-radius: inherit;
-}
-
-.readinessStats {
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.readinessStats span {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.readinessStats b {
+.manifestHeader b {
   color: var(--ink);
   font-size: 18px;
   line-height: 1;
+  white-space: nowrap;
 }
 
-.readinessActionPanel {
+.manifestGrid {
   display: grid;
-  align-content: space-between;
-  gap: var(--space-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.manifestItem {
+  display: grid;
+  align-content: center;
+  gap: 4px;
   min-width: 0;
+  min-height: 72px;
+  padding: var(--space-3);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.manifestItem b {
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.manifestItem.primary b {
+  color: var(--blue);
+}
+
+.readinessGatePanel {
+  grid-area: gate;
+  display: grid;
+  align-content: stretch;
+  gap: var(--space-5);
+  min-width: 0;
+  padding-left: clamp(18px, 2vw, 28px);
+  border-left: 1px solid var(--line-soft);
 }
 
 .readinessChecklist {
@@ -1628,9 +1637,9 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 34px;
+  min-height: 38px;
   color: var(--navy);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
 }
 
@@ -2330,6 +2339,7 @@ select:focus-visible {
   display: grid;
   gap: var(--space-3);
   width: min(360px, calc(100vw - 36px));
+  pointer-events: none;
 }
 
 .toast {
@@ -2344,6 +2354,7 @@ select:focus-visible {
   box-shadow: var(--shadow);
   font-size: 13px;
   font-weight: 800;
+  pointer-events: auto;
 }
 
 .toast.success svg {
@@ -2356,6 +2367,14 @@ select:focus-visible {
 
 .toast.info svg {
   color: var(--blue);
+}
+
+@media (min-width: 961px) {
+  .toastStack {
+    top: 178px;
+    right: clamp(18px, 2.4vw, 36px);
+    bottom: auto;
+  }
 }
 
 @media (max-width: 1240px) {
@@ -2463,12 +2482,18 @@ select:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .readinessProgress {
-    padding: var(--space-4) 0;
+  .readinessPanel {
+    grid-template-areas:
+      "status"
+      "manifest"
+      "gate";
+  }
+
+  .readinessGatePanel {
+    padding-top: var(--space-4);
+    padding-left: 0;
     border-top: 1px solid var(--line-soft);
-    border-right: 0;
     border-left: 0;
-    border-bottom: 1px solid var(--line-soft);
   }
 
   .generationDock {

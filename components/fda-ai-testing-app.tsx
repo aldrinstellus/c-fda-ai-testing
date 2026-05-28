@@ -132,7 +132,6 @@ export function FdaAiTestingApp() {
     (decision) => decision.status !== "Approved" && decision.comment.trim().length === 0
   ).length;
   const scenarioCount = generatedScenarios.length;
-  const scenarioApprovalPercent = Math.round((approvedCount / scenarioCount) * 100);
   const canGenerate = selectedFeatureCount > 0 && stagedDocuments.some((document) => document.progress > 0);
   const canExecute = approvedCount > 0 && commentMissingCount === 0 && approvalChecked;
   const coverage = 84;
@@ -608,6 +607,10 @@ export function FdaAiTestingApp() {
   function renderReview() {
     const currentDecision = decisions[selectedScenario.id];
     const hasEdits = scenarioDrafts[selectedScenario.id] !== selectedScenario.gherkin;
+    const hasCommentGaps = commentMissingCount > 0;
+    const readinessTitle = hasCommentGaps
+      ? "Resolve comments before approval"
+      : `${approvedCount} ${approvedCount === 1 ? "approved scenario" : "approved scenarios"} ready for gate`;
 
     return (
       <div className="reviewScreen">
@@ -819,48 +822,45 @@ export function FdaAiTestingApp() {
           </div>
         </section>
 
-        <aside className={cls("readinessPanel", commentMissingCount === 0 ? "ready" : "attention")}>
-          <div className="readinessStatus">
+        <aside className={cls("readinessPanel", hasCommentGaps ? "attention" : "ready")}>
+          <div className="readinessStatusBlock">
             <span className="readinessIcon" aria-hidden="true">
-              <ShieldCheck size={20} />
+              {hasCommentGaps ? <AlertTriangle size={20} /> : <ShieldCheck size={20} />}
             </span>
             <div className="readinessCopy">
-              <span className="eyebrow">Approval readiness</span>
-              <strong>{commentMissingCount === 0 ? "Ready for approval gate" : "Review gaps need attention"}</strong>
+              <span className="eyebrow">Approval package</span>
+              <strong>{readinessTitle}</strong>
               <p>
-                <b>{approvedCount} approved scenarios.</b> Pending decisions: {blockedDecisionCount}. Comment gaps:{" "}
-                {commentMissingCount}.
+                Agent 2 receives only approved scenarios. Held scenarios stay out of execution until revised. Comment
+                review count: {commentMissingCount}.
               </p>
             </div>
           </div>
 
-          <div className="readinessProgress" aria-label="Approval package progress">
-            <div className="readinessProgressHeader">
-              <span>
+          <div className="readinessManifest" aria-label="Approval package manifest">
+            <div className="manifestHeader">
+              <span>Execution package</span>
+              <b>
                 {approvedCount} of {scenarioCount} approved
+              </b>
+            </div>
+            <div className="manifestGrid">
+              <span className="manifestItem primary">
+                <b>{approvedCount}</b>
+                {approvedCount === 1 ? "approved scenario" : "approved scenarios"}
               </span>
-              <b>{scenarioApprovalPercent}%</b>
-            </div>
-            <div className="readinessTrack" aria-hidden="true">
-              <span style={{ width: `${scenarioApprovalPercent}%` }} />
-            </div>
-            <div className="readinessStats">
-              <span>
+              <span className="manifestItem">
                 <b>{blockedDecisionCount}</b>
-                pending
+                {blockedDecisionCount === 1 ? "held scenario" : "held scenarios"}
               </span>
-              <span>
+              <span className="manifestItem">
                 <b>{commentMissingCount}</b>
-                comment gaps
-              </span>
-              <span>
-                <b>100%</b>
-                audit trace
+                {commentMissingCount === 1 ? "comment gap" : "comment gaps"}
               </span>
             </div>
           </div>
 
-          <div className="readinessActionPanel">
+          <div className="readinessGatePanel">
             <div className="readinessChecklist">
               <span>
                 <CheckCircle2 size={15} />
@@ -868,11 +868,15 @@ export function FdaAiTestingApp() {
               </span>
               <span>
                 <FileCheck2 size={15} />
-                Decisions captured
+                Reviewer decisions captured
+              </span>
+              <span>
+                <Archive size={15} />
+                Audit trail packaged
               </span>
               <span className={commentMissingCount === 0 ? undefined : "warn"}>
                 {commentMissingCount === 0 ? <CheckCircle2 size={15} /> : <AlertTriangle size={15} />}
-                Required comments complete
+                Comment gaps: {commentMissingCount}.
               </span>
             </div>
             <button
