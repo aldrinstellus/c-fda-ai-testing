@@ -1062,9 +1062,9 @@ export function FdaAiTestingApp() {
               aria-expanded={sessionMenuOpen}
               onClick={() => setSessionMenuOpen((current) => !current)}
             >
-              <span>AD</span>
+              <span>JL</span>
               <div>
-                <strong>Reviewer</strong>
+                <strong>Jordan Lee</strong>
                 <em>FDA-RUN-009</em>
               </div>
               <ChevronDown className={cls("sessionChevron", sessionMenuOpen && "open")} size={14} />
@@ -1072,7 +1072,7 @@ export function FdaAiTestingApp() {
             {sessionMenuOpen && (
               <div className="sessionMenu" role="menu" aria-label="Reviewer menu">
                 <div className="sessionMenuHeader">
-                  <strong>Aldrin Dharmapuri</strong>
+                  <strong>Jordan Lee</strong>
                   <span>Reviewer / FDA-RUN-009</span>
                 </div>
                 <button
