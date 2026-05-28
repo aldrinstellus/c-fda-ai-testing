@@ -1,6 +1,6 @@
 # c-fda-ai-testing
 
-FDA AI Testing Framework POC app.
+FDA AI Agentic Testing POC app.
 
 This is a production-grade interactive prototype for the Jira scope covering stories K1-1 through K1-14:
 
@@ -16,4 +16,3 @@ npm install
 npm run dev
 npm run build
 ```
-

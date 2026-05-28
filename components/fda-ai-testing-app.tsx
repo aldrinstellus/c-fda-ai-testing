@@ -725,7 +725,7 @@ export function FdaAiTestingApp() {
           <div className="fdaMark">FDA</div>
           <div>
             <p>Center for Drug Evaluation and Research</p>
-            <h1>AI Testing Framework - POC Demo</h1>
+            <h1>AI Agentic Testing</h1>
           </div>
         </div>
 
