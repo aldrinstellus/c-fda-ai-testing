@@ -36,4 +36,7 @@ The PRD requires a strict sequence: Agent 1 generation, human review and edits, 
 npm install
 npm run dev
 npm run build
+npm run test:e2e
 ```
+
+`npm run test:e2e` runs the Playwright suite across desktop and mobile Chrome with realistic dummy CDER source files, reviewer decisions, approval, execution, reports, and audit search.
