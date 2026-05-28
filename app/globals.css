@@ -277,10 +277,10 @@ select:focus-visible {
 .workflowStep {
   position: relative;
   justify-content: flex-start;
-  gap: var(--space-3);
+  gap: 10px;
   min-width: 0;
-  min-height: 72px;
-  padding: 12px 14px;
+  min-height: 58px;
+  padding: 9px 13px;
   color: #d6e8f7;
   background: rgba(255, 255, 255, 0.04);
   border: 0;
@@ -312,12 +312,12 @@ select:focus-visible {
 }
 
 .workflowStep strong {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .workflowStep em {
-  margin-top: 3px;
-  font-size: 11px;
+  margin-top: 2px;
+  font-size: 10px;
   font-style: normal;
 }
 
@@ -325,8 +325,8 @@ select:focus-visible {
   display: inline-grid;
   flex: 0 0 auto;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   color: var(--navy);
   background: #e9f4fc;
   border-radius: 999px;
@@ -344,7 +344,7 @@ select:focus-visible {
 
 .stepArrow {
   position: absolute;
-  right: 10px;
+  right: 9px;
   color: rgba(255, 255, 255, 0.48);
 }
 
@@ -1511,7 +1511,7 @@ select:focus-visible {
   .workflowBar {
     top: 68px;
     overflow-x: auto;
-    grid-template-columns: repeat(4, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, minmax(206px, 1fr));
   }
 
   .productShell {
@@ -1628,7 +1628,7 @@ select:focus-visible {
   }
 
   .workflowStep {
-    min-width: 230px;
+    min-width: 196px;
   }
 
   .stageCanvas,
