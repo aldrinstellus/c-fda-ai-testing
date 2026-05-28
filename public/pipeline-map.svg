@@ -14,7 +14,7 @@
   <g>
     <rect x="44" y="72" width="148" height="86" rx="10" fill="#FFFFFF" stroke="#B8C7D9"/>
     <text x="66" y="104" fill="#112E51" font-family="Arial, sans-serif" font-size="15" font-weight="700">Source package</text>
-    <text x="66" y="130" fill="#526171" font-family="Arial, sans-serif" font-size="12">PRD, Jira, docs</text>
+    <text x="66" y="130" fill="#526171" font-family="Arial, sans-serif" font-size="12">PRD, policy, docs</text>
   </g>
   <g>
     <rect x="236" y="72" width="148" height="86" rx="10" fill="#E8F4FB" stroke="#7BBDE1"/>

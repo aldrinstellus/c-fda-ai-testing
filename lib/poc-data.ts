@@ -7,34 +7,28 @@ export type ScenarioDecision = {
   comment: string;
 };
 
-export const jiraStories = [
-  ["K1-1", "0.1", "Header & Branding", "Foundation"],
-  ["K1-2", "0.2", "Workflow Navigation", "Foundation"],
-  ["K1-3", "0.3", "Global Notifications & Loading", "Foundation"],
-  ["K1-4", "1.1", "Document Upload", "Trigger"],
-  ["K1-5", "1.2", "Feature Selection", "Trigger"],
-  ["K1-6", "1.3", "Optional Context", "Trigger"],
-  ["K1-7", "1.4", "Start Generation", "Trigger"],
-  ["K1-8", "2.1", "View Generated Tests", "Review"],
-  ["K1-9", "2.2", "Inline Editing", "Review"],
-  ["K1-10", "2.3", "Approve / Reject Scenarios", "Review"],
-  ["K1-11", "3.1", "Approval Gate", "Approval"],
-  ["K1-12", "4.1", "Live Execution View", "Execution"],
-  ["K1-13", "5.1", "Results Summary", "Reports"],
-  ["K1-14", "5.2", "Evidence & Audit Trail Drill-Down", "Reports"]
+export const workspaceSections = [
+  ["01", "Source Intake", "Documents, parsing, format checks"],
+  ["02", "Feature Scope", "Selected capabilities and risk focus"],
+  ["03", "Test Generation", "Gherkin creation, dedupe, coverage"],
+  ["04", "Review Queue", "Scenario decisions and inline edits"],
+  ["05", "Approval Gate", "Human responsibility before execution"],
+  ["06", "Live Execution", "Agent 2 progress, retries, controls"],
+  ["07", "Run Report", "Pass rate, feature results, export"],
+  ["08", "Evidence Vault", "Screenshots, logs, audit history"]
 ] as const;
 
 export const sourceDocuments = [
   {
-    name: "CDER_POC_scope.doc",
-    kind: "Confluence export",
+    name: "CDER_review_scope.doc",
+    kind: "Review scope",
     size: "142 KB",
     status: "Parsed",
     progress: 100
   },
   {
-    name: "K1_story_exports.zip",
-    kind: "Jira PDF bundle",
+    name: "requirement_packet.zip",
+    kind: "Structured source packet",
     size: "1.1 MB",
     status: "Parsed",
     progress: 100
@@ -59,56 +53,56 @@ export const featureCandidates = [
   {
     id: "feature-upload",
     title: "Multi-document requirement intake",
-    source: "K1-4",
+    source: "Source intake",
     risk: "Medium",
     selected: true
   },
   {
     id: "feature-scope",
     title: "Parsed feature selection and manual entry",
-    source: "K1-5",
+    source: "Feature scope",
     risk: "Medium",
     selected: true
   },
   {
     id: "feature-generation",
     title: "Agent 1 Gherkin generation with live progress",
-    source: "K1-7",
+    source: "Generation",
     risk: "High",
     selected: true
   },
   {
     id: "feature-review",
     title: "Grouped scenario review with traceability",
-    source: "K1-8",
+    source: "Review queue",
     risk: "High",
     selected: true
   },
   {
     id: "feature-editing",
     title: "Inline Gherkin editing and validation",
-    source: "K1-9",
+    source: "Scenario editor",
     risk: "High",
     selected: true
   },
   {
     id: "feature-gate",
     title: "Human approval gate before Agent 2",
-    source: "K1-11",
+    source: "Governance gate",
     risk: "Critical",
     selected: true
   },
   {
     id: "feature-execution",
     title: "Live Agent 2 execution and self-healing",
-    source: "K1-12",
+    source: "Execution",
     risk: "High",
     selected: true
   },
   {
     id: "feature-evidence",
     title: "Evidence and immutable audit trail",
-    source: "K1-14",
+    source: "Evidence vault",
     risk: "Critical",
     selected: true
   }
@@ -118,19 +112,19 @@ export const generatedScenarios = [
   {
     id: "SCN-001",
     feature: "Document intake",
-    requirement: "K1-4",
+    requirement: "REQ-INTAKE",
     title: "Upload supported requirement sources",
     coverage: "Covered",
     impact: "New",
     stale: false,
     confidence: 96,
     gherkin:
-      "Feature: Document intake\\n\\nScenario: Upload supported requirement sources\\n  Given a reviewer is on the Trigger stage\\n  When they upload PDF, Jira, Confluence, Markdown, and HTML sources\\n  Then each supported source is accepted\\n  And the file list shows name, size, progress, and remove actions\\n  And the upload event is retained inside FDA infrastructure"
+      "Feature: Document intake\\n\\nScenario: Upload supported requirement sources\\n  Given a reviewer is on the Trigger stage\\n  When they upload PDF, structured exports, Confluence, Markdown, and HTML sources\\n  Then each supported source is accepted\\n  And the file list shows name, size, progress, and remove actions\\n  And the upload event is retained inside FDA infrastructure"
   },
   {
     id: "SCN-014",
     feature: "Gherkin generation",
-    requirement: "K1-7",
+    requirement: "REQ-GEN",
     title: "Start Agent 1 only after scope is ready",
     coverage: "Covered",
     impact: "Changed",
@@ -142,7 +136,7 @@ export const generatedScenarios = [
   {
     id: "SCN-021",
     feature: "Review and edit",
-    requirement: "K1-9",
+    requirement: "REQ-REVIEW",
     title: "Persist edited Gherkin as execution source",
     coverage: "Covered",
     impact: "Changed",
@@ -154,7 +148,7 @@ export const generatedScenarios = [
   {
     id: "SCN-028",
     feature: "Approval governance",
-    requirement: "K1-11",
+    requirement: "REQ-GATE",
     title: "Block Agent 2 until explicit approval",
     coverage: "Covered",
     impact: "New",
@@ -166,7 +160,7 @@ export const generatedScenarios = [
   {
     id: "SCN-036",
     feature: "Evidence package",
-    requirement: "K1-14",
+    requirement: "REQ-EVIDENCE",
     title: "Open immutable evidence trail",
     coverage: "Gap flagged",
     impact: "Existing",
@@ -213,16 +207,16 @@ export const runBreakdown = [
 ] as const;
 
 export const auditEvents = [
-  "10:53:36 K1 PDF bundle attached to source package",
+  "10:53:36 Requirement packet attached to source package",
   "10:55:23 Agent 1 parsed document upload requirements",
-  "10:56:18 Generation job K1-GEN-042 started",
+  "10:56:18 Generation job FDA-GEN-042 started",
   "10:56:33 Coverage analysis reached 84 percent",
   "10:56:49 Reviewer edited SCN-021 local session copy",
   "10:57:04 Scenario SCN-036 marked Needs Revision",
   "10:57:35 Reviewer accepted audit responsibility",
   "10:57:52 Agent 2 execution began inside FDA infrastructure",
   "10:58:16 Self-healing locator recovery applied",
-  "10:58:30 Evidence package exported for run K1-RUN-009"
+  "10:58:30 Evidence package exported for run FDA-RUN-009"
 ] as const;
 
 export const liveExecutions = [

@@ -1,8 +1,8 @@
 # c-fda-ai-testing
 
-FDA AI Agentic Testing POC app.
+FDA AI Agentic Testing app.
 
-This is a production-grade interactive prototype for the Jira scope covering stories K1-1 through K1-14:
+This is a production-grade interactive app for governed AI test generation, review, execution, and evidence inspection:
 
 - Trigger: source upload, feature selection, optional context, Agent 1 generation
 - Review: generated Gherkin, traceability, stale/impacted tests, inline edits, scenario decisions

@@ -38,10 +38,10 @@ import {
   auditEvents,
   featureCandidates,
   generatedScenarios,
-  jiraStories,
   liveExecutions,
   runBreakdown,
   sourceDocuments,
+  workspaceSections,
   type ScenarioDecision,
   type ScenarioStatus,
   type StageId
@@ -223,7 +223,7 @@ export function FdaAiTestingApp() {
         <div className="panel intakePanel">
           <div className="panelHeader">
             <div>
-              <span className="eyebrow">K1-4 / K1-5 / K1-6 / K1-7</span>
+              <span className="eyebrow">Source intake</span>
               <h2>Trigger Agent 1 from controlled source material</h2>
             </div>
             <span className="sourcePill">
@@ -243,7 +243,7 @@ export function FdaAiTestingApp() {
             <UploadCloud size={34} />
             <div>
               <h3>Drop requirement sources</h3>
-              <p>PDF PRDs, Markdown, Jira exports, Confluence pages, and HTML help articles.</p>
+              <p>PDF PRDs, Markdown, structured exports, Confluence pages, and HTML help articles.</p>
             </div>
             <label className="secondaryButton fileButton">
               <FolderOpen size={16} />
@@ -359,7 +359,7 @@ export function FdaAiTestingApp() {
         <div className="panel scenarioTablePanel">
           <div className="panelHeader">
             <div>
-              <span className="eyebrow">K1-8 / K1-9 / K1-10</span>
+              <span className="eyebrow">Review workbench</span>
               <h2>Generated tests with traceability and human decisions</h2>
             </div>
             <div className="metricBadge">
@@ -483,7 +483,7 @@ export function FdaAiTestingApp() {
         <div className="panel gatePanel">
           <div className="panelHeader">
             <div>
-              <span className="eyebrow">K1-11 / K1-12</span>
+              <span className="eyebrow">Governed execution</span>
               <h2>Explicit human gate before Agent 2</h2>
             </div>
             <span className={cls("statusChip", canExecute && "good")}>{canExecute ? "Ready" : "Blocked"}</span>
@@ -539,7 +539,7 @@ export function FdaAiTestingApp() {
               disabled={!executionStarted}
               onClick={() => {
                 setExecutionPaused((current) => !current);
-                addToast("info", executionPaused ? "Execution resumed." : "Execution paused for POC safety.");
+                addToast("info", executionPaused ? "Execution resumed." : "Execution paused for operator control.");
               }}
             >
               <Pause size={16} />
@@ -585,8 +585,8 @@ export function FdaAiTestingApp() {
         <div className="panel reportSummary">
           <div className="panelHeader">
             <div>
-              <span className="eyebrow">K1-13</span>
-              <h2>POC run summary</h2>
+              <span className="eyebrow">Run report</span>
+              <h2>Run summary</h2>
             </div>
             <button className="secondaryButton" type="button" onClick={() => addToast("success", "Full run package export prepared.")}>
               <Download size={16} />
@@ -636,7 +636,7 @@ export function FdaAiTestingApp() {
         <div className="panel evidencePanel">
           <div className="panelHeader">
             <div>
-              <span className="eyebrow">K1-14</span>
+              <span className="eyebrow">Evidence vault</span>
               <h2>Evidence and audit drill-down</h2>
             </div>
             <span className="sourcePill">
@@ -717,7 +717,7 @@ export function FdaAiTestingApp() {
     <main className="appShell">
       <div className="govBanner">
         <span className="flagMark">US</span>
-        <span>Official FDA/CDER POC environment. All demo data and agent activity remains inside the controlled workspace.</span>
+        <span>Controlled FDA/CDER review environment. All demo data and agent activity remains inside the workspace boundary.</span>
       </div>
 
       <header className="topBar">
@@ -757,7 +757,7 @@ export function FdaAiTestingApp() {
           <span>AD</span>
           <div>
             <strong>Reviewer</strong>
-            <em>POC session K1-RUN-009</em>
+            <em>Run FDA-RUN-009</em>
           </div>
           <button className="iconButton inverse" type="button" aria-label="Log out" onClick={() => addToast("info", "Session cleared.")}>
             <X size={16} />
@@ -768,9 +768,9 @@ export function FdaAiTestingApp() {
       <div className="appBody">
         <aside className="leftRail">
           <div className="railPanel priority">
-            <span className="eyebrow">POC health</span>
+            <span className="eyebrow">Run status</span>
             <strong>Ready for review</strong>
-            <p>Agent 1, human gate, Agent 2, and evidence export are mapped to Jira K1-1 through K1-14.</p>
+            <p>Source intake, generation, approval, execution, and evidence export are ready for a governed review run.</p>
           </div>
 
           <div className="railPanel">
@@ -790,12 +790,12 @@ export function FdaAiTestingApp() {
           </div>
 
           <div className="railPanel storyRail">
-            <span className="eyebrow">Jira scope</span>
-            {jiraStories.map(([key, story, title, phase]) => (
-              <div className="storyChip" key={key}>
-                <span>{story}</span>
+            <span className="eyebrow">Workspace</span>
+            {workspaceSections.map(([index, title, detail]) => (
+              <div className="storyChip" key={index}>
+                <span>{index}</span>
                 <strong>{title}</strong>
-                <em>{phase}</em>
+                <em>{detail}</em>
               </div>
             ))}
           </div>
@@ -814,7 +814,7 @@ export function FdaAiTestingApp() {
               </span>
               <span className="sourcePill muted">
                 <Clock3 size={14} />
-                Last Jira export 10:58
+                Last source sync 10:58
               </span>
             </div>
           </div>

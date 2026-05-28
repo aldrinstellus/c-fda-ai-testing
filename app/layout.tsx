@@ -17,7 +17,7 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "FDA AI Agentic Testing",
-  description: "Human-governed AI testing workflow for FDA/CDER POC review."
+  description: "Human-governed AI testing workflow for FDA/CDER review."
 };
 
 export default function RootLayout({
