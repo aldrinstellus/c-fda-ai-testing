@@ -1,0 +1,54 @@
+<svg width="880" height="340" viewBox="0 0 880 340" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">FDA AI testing workflow map</title>
+  <desc id="desc">A visual workflow showing source documents, Agent 1 generation, human review, Agent 2 execution, and evidence reports.</desc>
+  <rect width="880" height="340" rx="18" fill="#F4F7FA"/>
+  <g stroke="#D2DCE8" stroke-width="1">
+    <path d="M55 80H825"/>
+    <path d="M55 170H825"/>
+    <path d="M55 260H825"/>
+    <path d="M140 40V300"/>
+    <path d="M320 40V300"/>
+    <path d="M500 40V300"/>
+    <path d="M680 40V300"/>
+  </g>
+  <g>
+    <rect x="44" y="72" width="148" height="86" rx="10" fill="#FFFFFF" stroke="#B8C7D9"/>
+    <text x="66" y="104" fill="#112E51" font-family="Arial, sans-serif" font-size="15" font-weight="700">Source package</text>
+    <text x="66" y="130" fill="#526171" font-family="Arial, sans-serif" font-size="12">PRD, Jira, docs</text>
+  </g>
+  <g>
+    <rect x="236" y="72" width="148" height="86" rx="10" fill="#E8F4FB" stroke="#7BBDE1"/>
+    <text x="258" y="104" fill="#005EA8" font-family="Arial, sans-serif" font-size="15" font-weight="700">Agent 1</text>
+    <text x="258" y="130" fill="#204F74" font-family="Arial, sans-serif" font-size="12">Gherkin + coverage</text>
+  </g>
+  <g>
+    <rect x="428" y="72" width="148" height="86" rx="10" fill="#FFFFFF" stroke="#B8C7D9"/>
+    <text x="450" y="104" fill="#112E51" font-family="Arial, sans-serif" font-size="15" font-weight="700">Human review</text>
+    <text x="450" y="130" fill="#526171" font-family="Arial, sans-serif" font-size="12">Edit, approve, reject</text>
+  </g>
+  <g>
+    <rect x="620" y="72" width="148" height="86" rx="10" fill="#E7F4EA" stroke="#8BCB98"/>
+    <text x="642" y="104" fill="#2E8540" font-family="Arial, sans-serif" font-size="15" font-weight="700">Agent 2</text>
+    <text x="642" y="130" fill="#315D3A" font-family="Arial, sans-serif" font-size="12">Execute + recover</text>
+  </g>
+  <path d="M194 115H228" stroke="#005EA8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M386 115H420" stroke="#005EA8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M578 115H612" stroke="#2E8540" stroke-width="3" stroke-linecap="round"/>
+  <g>
+    <rect x="164" y="210" width="170" height="66" rx="10" fill="#FFF3CF" stroke="#D9A400"/>
+    <text x="186" y="238" fill="#5C4600" font-family="Arial, sans-serif" font-size="14" font-weight="700">Approval gate</text>
+    <text x="186" y="260" fill="#6D5B1C" font-family="Arial, sans-serif" font-size="12">Explicit audit responsibility</text>
+  </g>
+  <g>
+    <rect x="412" y="210" width="170" height="66" rx="10" fill="#FFFFFF" stroke="#B8C7D9"/>
+    <text x="434" y="238" fill="#112E51" font-family="Arial, sans-serif" font-size="14" font-weight="700">Evidence package</text>
+    <text x="434" y="260" fill="#526171" font-family="Arial, sans-serif" font-size="12">Screens, logs, tokens</text>
+  </g>
+  <g>
+    <rect x="660" y="210" width="170" height="66" rx="10" fill="#FFFFFF" stroke="#B8C7D9"/>
+    <text x="682" y="238" fill="#112E51" font-family="Arial, sans-serif" font-size="14" font-weight="700">Run report</text>
+    <text x="682" y="260" fill="#526171" font-family="Arial, sans-serif" font-size="12">Pass rate + export</text>
+  </g>
+  <path d="M334 243H404" stroke="#2E8540" stroke-width="3" stroke-linecap="round"/>
+  <path d="M582 243H652" stroke="#2E8540" stroke-width="3" stroke-linecap="round"/>
+</svg>
