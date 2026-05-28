@@ -1400,11 +1400,12 @@ select:focus-visible {
 
 .reviewScreen {
   display: grid;
-  grid-template-columns: minmax(290px, 0.74fr) minmax(0, 1.42fr);
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "summary summary"
-    "nav editor"
-    "ready editor";
+    "summary"
+    "nav"
+    "editor"
+    "ready";
   gap: clamp(16px, 1.8vw, 22px);
   margin-top: var(--space-6);
 }
@@ -1465,13 +1466,14 @@ select:focus-visible {
 }
 
 .scenarioNavigator .panelHeading {
-  align-items: stretch;
-  flex-direction: column;
-  gap: var(--space-3);
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: var(--space-4);
 }
 
 .scenarioNavigator .secondaryButton {
-  width: 100%;
+  width: auto;
   justify-content: center;
 }
 
@@ -1484,7 +1486,8 @@ select:focus-visible {
 .readinessPanel {
   grid-area: ready;
   display: grid;
-  align-content: start;
+  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.8fr) auto;
+  align-items: center;
   gap: var(--space-4);
   background: #f8fbfe;
 }
@@ -1526,8 +1529,8 @@ select:focus-visible {
 
 .scenarioList {
   display: grid;
-  max-height: 530px;
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   border: 1px solid var(--line-soft);
   border-radius: 7px;
 }
@@ -1542,13 +1545,13 @@ select:focus-visible {
 
 .scenarioRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  column-gap: var(--space-2);
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  column-gap: var(--space-3);
   row-gap: var(--space-2);
   align-items: center;
   width: 100%;
-  min-height: 76px;
-  padding: var(--space-3) var(--space-3) var(--space-4);
+  min-height: 66px;
+  padding: var(--space-3) var(--space-4);
   color: var(--ink);
   background: #ffffff;
   border: 0;
@@ -1589,12 +1592,8 @@ select:focus-visible {
   min-width: 0;
 }
 
-.scenarioRow > span:not(.scenarioId) {
-  grid-column: 1 / -1;
-}
-
 .scenarioRow strong {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .scenarioRow em {
@@ -1631,7 +1630,7 @@ select:focus-visible {
 
 .editorShell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(210px, 240px);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
 }
 
@@ -1647,7 +1646,7 @@ select:focus-visible {
 
 .validationPanel {
   display: grid;
-  align-content: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-3);
 }
 
@@ -1670,7 +1669,7 @@ select:focus-visible {
 
 .diffPanel {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
   margin-top: var(--space-4);
 }
@@ -1693,7 +1692,7 @@ select:focus-visible {
 
 .decisionPanel {
   display: grid;
-  grid-template-columns: minmax(320px, auto) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
   gap: var(--space-4);
   align-items: start;
   margin-top: var(--space-4);
@@ -2175,6 +2174,8 @@ select:focus-visible {
 
   .generationDock,
   .editorShell,
+  .validationPanel,
+  .readinessPanel,
   .decisionPanel {
     grid-template-columns: 1fr;
   }
@@ -2271,6 +2272,16 @@ select:focus-visible {
     align-items: stretch;
     flex-direction: column;
     gap: var(--space-3);
+  }
+
+  .scenarioNavigator .panelHeading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scenarioNavigator .secondaryButton {
+    width: 100%;
+    white-space: nowrap;
   }
 
   .triggerScreen .buttonCluster,
