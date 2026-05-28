@@ -7,45 +7,111 @@ export type ScenarioDecision = {
   comment: string;
 };
 
-export const workspaceSections = [
-  ["01", "Source Intake", "Documents, parsing, format checks"],
-  ["02", "Feature Scope", "Selected capabilities and risk focus"],
-  ["03", "Test Generation", "Gherkin creation, dedupe, coverage"],
-  ["04", "Review Queue", "Scenario decisions and inline edits"],
-  ["05", "Approval Gate", "Human responsibility before execution"],
-  ["06", "Live Execution", "Agent 2 progress, retries, controls"],
-  ["07", "Run Report", "Pass rate, feature results, export"],
-  ["08", "Evidence Vault", "Screenshots, logs, audit history"]
+export const workflowStages = [
+  {
+    id: "trigger",
+    label: "Trigger",
+    summary: "Ingest source documents, select feature scope, and start Agent 1.",
+    owner: "Reviewer + Agent 1"
+  },
+  {
+    id: "review",
+    label: "Review & Edit",
+    summary: "Inspect generated Gherkin, correct scenarios, and record reviewer decisions.",
+    owner: "Reviewer"
+  },
+  {
+    id: "approve",
+    label: "Approve & Execute",
+    summary: "Accept audit responsibility, send edited tests to Agent 2, and monitor execution.",
+    owner: "Reviewer + Agent 2"
+  },
+  {
+    id: "reports",
+    label: "Reports",
+    summary: "Evaluate pass rate, feature results, evidence, and immutable audit history.",
+    owner: "Reviewer"
+  }
 ] as const;
+
+export const prdGuardrails = [
+  {
+    label: "Sequential gate",
+    detail: "Agent 2 cannot run until generated tests are reviewed and approved."
+  },
+  {
+    label: "FDA boundary",
+    detail: "All source data, model calls, execution logs, and evidence remain inside FDA infrastructure."
+  },
+  {
+    label: "Human accountability",
+    detail: "Approval requires explicit audit responsibility before execution begins."
+  },
+  {
+    label: "Traceable evidence",
+    detail: "Every scenario maps back to requirements and produces logs, timestamps, and evidence."
+  }
+] as const;
+
+export const stageAcceptance: Record<StageId, string[]> = {
+  trigger: [
+    "Upload multiple PDF, Markdown, export, Confluence, and HTML sources.",
+    "Select or deselect parsed features before generation.",
+    "Save optional reviewer instructions with the generation job.",
+    "Disable generation until a source and feature scope exist."
+  ],
+  review: [
+    "Group generated scenarios by feature and requirement.",
+    "Show coverage, gaps, duplicate removal, and stale impacted tests.",
+    "Persist inline Gherkin edits as the execution source.",
+    "Require comments for Needs Revision or Rejected decisions."
+  ],
+  approve: [
+    "Require at least one approved scenario before Agent 2 is available.",
+    "Show approved count and estimated runtime before execution.",
+    "Require audit responsibility confirmation.",
+    "Expose live execution progress, retry indicators, logs, pause, and cancel controls."
+  ],
+  reports: [
+    "Show pass/fail counts and pass rate against the 90 percent target.",
+    "Show per-feature breakdown.",
+    "Support full run package export.",
+    "Provide searchable evidence and immutable audit trail drill-down."
+  ]
+};
 
 export const sourceDocuments = [
   {
     name: "CDER_review_scope.doc",
-    kind: "Review scope",
+    kind: "Confluence export",
     size: "142 KB",
     status: "Parsed",
-    progress: 100
+    progress: 100,
+    issues: 0
   },
   {
     name: "requirement_packet.zip",
     kind: "Structured source packet",
     size: "1.1 MB",
     status: "Parsed",
-    progress: 100
+    progress: 100,
+    issues: 0
   },
   {
     name: "AI_drug_review_PRD.pdf",
     kind: "PRD",
     size: "2.4 MB",
-    status: "Indexing",
-    progress: 78
+    status: "Indexed",
+    progress: 100,
+    issues: 1
   },
   {
     name: "HTML_help_articles",
     kind: "Help content",
     size: "628 KB",
     status: "Queued",
-    progress: 32
+    progress: 36,
+    issues: 0
   }
 ] as const;
 
@@ -119,7 +185,7 @@ export const generatedScenarios = [
     stale: false,
     confidence: 96,
     gherkin:
-      "Feature: Document intake\\n\\nScenario: Upload supported requirement sources\\n  Given a reviewer is on the Trigger stage\\n  When they upload PDF, structured exports, Confluence, Markdown, and HTML sources\\n  Then each supported source is accepted\\n  And the file list shows name, size, progress, and remove actions\\n  And the upload event is retained inside FDA infrastructure"
+      "Feature: Document intake\n\nScenario: Upload supported requirement sources\n  Given a reviewer is on the Trigger stage\n  When they upload PDF, structured exports, Confluence, Markdown, and HTML sources\n  Then each supported source is accepted\n  And the file list shows name, size, progress, and remove actions\n  And the upload event is retained inside FDA infrastructure"
   },
   {
     id: "SCN-014",
@@ -131,7 +197,7 @@ export const generatedScenarios = [
     stale: false,
     confidence: 93,
     gherkin:
-      "Feature: Agent 1 generation\\n\\nScenario: Start generation after intake prerequisites\\n  Given at least one source document is parsed\\n  And at least one feature is selected\\n  When the reviewer selects Generate Gherkin Test Cases\\n  Then Agent 1 starts a generation job\\n  And live status, ETA, and logs are displayed\\n  And the session ID is stored for audit review"
+      "Feature: Agent 1 generation\n\nScenario: Start generation after intake prerequisites\n  Given at least one source document is parsed\n  And at least one feature is selected\n  When the reviewer selects Generate Gherkin Test Cases\n  Then Agent 1 starts a generation job\n  And live status, ETA, and logs are displayed\n  And the session ID is stored for audit review"
   },
   {
     id: "SCN-021",
@@ -143,7 +209,7 @@ export const generatedScenarios = [
     stale: false,
     confidence: 91,
     gherkin:
-      "Feature: Inline scenario editing\\n\\nScenario: Use edited scenario for execution\\n  Given a generated scenario is displayed in review\\n  When the reviewer edits the Given When Then steps\\n  Then validation runs in real time\\n  And the edited session copy is saved\\n  And Agent 2 receives the edited version after approval"
+      "Feature: Inline scenario editing\n\nScenario: Use edited scenario for execution\n  Given a generated scenario is displayed in review\n  When the reviewer edits the Given When Then steps\n  Then validation runs in real time\n  And the edited session copy is saved\n  And Agent 2 receives the edited version after approval"
   },
   {
     id: "SCN-028",
@@ -155,7 +221,7 @@ export const generatedScenarios = [
     stale: false,
     confidence: 98,
     gherkin:
-      "Feature: Approval gate\\n\\nScenario: Reviewer accepts audit responsibility\\n  Given one or more scenarios are approved\\n  When the reviewer opens Approve and Execute\\n  And confirms the audit responsibility statement\\n  Then Agent 2 receives the approved edited package\\n  And execution starts only inside FDA infrastructure"
+      "Feature: Approval gate\n\nScenario: Reviewer accepts audit responsibility\n  Given one or more scenarios are approved\n  When the reviewer opens Approve and Execute\n  And confirms the audit responsibility statement\n  Then Agent 2 receives the approved edited package\n  And execution starts only inside FDA infrastructure"
   },
   {
     id: "SCN-036",
@@ -167,7 +233,38 @@ export const generatedScenarios = [
     stale: true,
     confidence: 79,
     gherkin:
-      "Feature: Evidence drill-down\\n\\nScenario: Inspect evidence for a failed case\\n  Given a completed Agent 2 run has evidence records\\n  When the reviewer opens a failed result\\n  Then the evidence panel shows actions, screenshots, logs, timestamps, and runtime\\n  And the audit trail shows model ID, token count, human decisions, and timestamps"
+      "Feature: Evidence drill-down\n\nScenario: Inspect evidence for a failed case\n  Given a completed Agent 2 run has evidence records\n  When the reviewer opens a failed result\n  Then the evidence panel shows actions, screenshots, logs, timestamps, and runtime\n  And the audit trail shows model ID, token count, human decisions, and timestamps"
+  }
+] as const;
+
+export const liveExecutions = [
+  {
+    name: "Document intake suite",
+    state: "Passed",
+    progress: 100,
+    detail: "7 of 7 complete",
+    tone: "good"
+  },
+  {
+    name: "Review and edit suite",
+    state: "Running",
+    progress: 76,
+    detail: "Retry 1 self-healed",
+    tone: "warn"
+  },
+  {
+    name: "Approval governance suite",
+    state: "Queued",
+    progress: 42,
+    detail: "Waiting for runner slot",
+    tone: "info"
+  },
+  {
+    name: "Evidence export suite",
+    state: "Watching",
+    progress: 22,
+    detail: "Screenshots streaming",
+    tone: "info"
   }
 ] as const;
 
@@ -207,8 +304,8 @@ export const runBreakdown = [
 ] as const;
 
 export const auditEvents = [
-  "10:53:36 Requirement packet attached to source package",
-  "10:55:23 Agent 1 parsed document upload requirements",
+  "10:53:36 Source packet attached to run FDA-RUN-009",
+  "10:55:23 Agent 1 parsed upload requirements",
   "10:56:18 Generation job FDA-GEN-042 started",
   "10:56:33 Coverage analysis reached 84 percent",
   "10:56:49 Reviewer edited SCN-021 local session copy",
@@ -217,35 +314,4 @@ export const auditEvents = [
   "10:57:52 Agent 2 execution began inside FDA infrastructure",
   "10:58:16 Self-healing locator recovery applied",
   "10:58:30 Evidence package exported for run FDA-RUN-009"
-] as const;
-
-export const liveExecutions = [
-  {
-    name: "Document intake suite",
-    state: "Passed",
-    progress: 100,
-    detail: "7 of 7 complete",
-    tone: "good"
-  },
-  {
-    name: "Review and edit suite",
-    state: "Running",
-    progress: 76,
-    detail: "Retry 1 self-healed",
-    tone: "warn"
-  },
-  {
-    name: "Approval governance suite",
-    state: "Queued",
-    progress: 42,
-    detail: "Waiting for runner slot",
-    tone: "info"
-  },
-  {
-    name: "Evidence export suite",
-    state: "Watching",
-    progress: 22,
-    detail: "Screenshots streaming",
-    tone: "info"
-  }
 ] as const;
