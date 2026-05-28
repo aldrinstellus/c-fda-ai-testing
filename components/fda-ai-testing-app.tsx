@@ -153,7 +153,7 @@ export function FdaAiTestingApp() {
 
   function addToast(tone: Toast["tone"], text: string) {
     const id = Date.now();
-    setToasts((current) => [...current.slice(-2), { id, tone, text }]);
+    setToasts([{ id, tone, text }]);
     window.setTimeout(() => {
       setToasts((current) => current.filter((toast) => toast.id !== id));
     }, 4200);

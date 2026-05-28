@@ -2284,6 +2284,17 @@ select:focus-visible {
     white-space: nowrap;
   }
 
+  .reportSummary .panelHeading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .reportSummary .secondaryButton {
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
   .triggerScreen .buttonCluster,
   .triggerScreen .panelHeadingActions {
     justify-content: space-between;
