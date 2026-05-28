@@ -38,7 +38,7 @@ import {
   XCircle
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   auditEvents,
   featureCandidates,
@@ -91,6 +91,7 @@ function getInitialDecisions(): Record<string, ScenarioDecision> {
 }
 
 export function FdaAiTestingApp() {
+  const stageCanvasRef = useRef<HTMLElement | null>(null);
   const [isSignedIn, setIsSignedIn] = useState(true);
   const [sessionMenuOpen, setSessionMenuOpen] = useState(false);
   const [activeStage, setActiveStage] = useState<StageId>("trigger");
@@ -144,6 +145,11 @@ export function FdaAiTestingApp() {
 
     return auditEvents.filter((event) => event.toLowerCase().includes(query));
   }, [auditSearch]);
+
+  useEffect(() => {
+    stageCanvasRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [activeStage, executionStarted]);
 
   function addToast(tone: Toast["tone"], text: string) {
     const id = Date.now();
@@ -607,6 +613,7 @@ export function FdaAiTestingApp() {
           <div>
             <span className="eyebrow">Agent 1 output</span>
             <h3>Coverage and quality review</h3>
+            <p>Review generated scenarios, edit the execution copy, and resolve decisions before the approval gate.</p>
           </div>
           <div className="summaryPills">
             <span>
@@ -646,6 +653,7 @@ export function FdaAiTestingApp() {
                 className={cls("scenarioRow", selectedScenario.id === scenario.id && "active")}
                 key={scenario.id}
                 type="button"
+                aria-pressed={selectedScenario.id === scenario.id}
                 onClick={() => setSelectedScenarioId(scenario.id)}
               >
                 <span className="scenarioId">{scenario.id}</span>
@@ -749,6 +757,16 @@ export function FdaAiTestingApp() {
           <span className="eyebrow">Approval readiness</span>
           <strong>{approvedCount} approved scenarios</strong>
           <p>{blockedDecisionCount} scenarios are held for revision or rejection. Comment gaps: {commentMissingCount}.</p>
+          <div className="readinessChecklist">
+            <span>
+              <CheckCircle2 size={15} />
+              Edited session copy retained
+            </span>
+            <span>
+              <FileCheck2 size={15} />
+              Reviewer decisions captured
+            </span>
+          </div>
           <button className="primaryButton" type="button" disabled={approvedCount === 0} onClick={() => setActiveStage("approve")}>
             <ShieldCheck size={17} />
             Continue to approval gate
@@ -1184,7 +1202,7 @@ export function FdaAiTestingApp() {
       <div className="productShell">
         {renderStageRail()}
 
-        <section className="stageCanvas" aria-labelledby="stage-title">
+        <section className="stageCanvas" aria-labelledby="stage-title" ref={stageCanvasRef}>
           <div className="stageIntro">
             <div className="stageTitleBlock">
               <span className="eyebrow">Operational workflow</span>

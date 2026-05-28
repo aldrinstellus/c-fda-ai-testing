@@ -1400,47 +1400,59 @@ select:focus-visible {
 
 .reviewScreen {
   display: grid;
-  grid-template-columns: minmax(270px, 0.72fr) minmax(0, 1.25fr);
+  grid-template-columns: minmax(290px, 0.74fr) minmax(0, 1.42fr);
   grid-template-areas:
     "summary summary"
     "nav editor"
     "ready editor";
-  gap: var(--space-5);
+  gap: clamp(16px, 1.8vw, 22px);
   margin-top: var(--space-6);
 }
 
 .reviewSummary {
   grid-area: summary;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-5);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(460px, 0.95fr);
+  align-items: start;
+  gap: clamp(18px, 2vw, 28px);
   background: #f8fbfe;
 }
 
+.reviewSummary p {
+  max-width: 62ch;
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .summaryPills {
-  gap: var(--space-3);
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  align-self: stretch;
 }
 
 .summaryPills span,
 .reportMetrics span {
   display: grid;
-  gap: 1px;
-  min-width: 122px;
-  padding: var(--space-3);
+  align-content: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: 72px;
+  padding: var(--space-3) var(--space-4);
   color: var(--muted);
   background: #ffffff;
   border: 1px solid var(--line-soft);
-  border-radius: 7px;
+  border-radius: 6px;
   font-size: 12px;
 }
 
 .summaryPills b,
 .reportMetrics b {
   color: var(--ink);
-  font-size: 22px;
+  font-size: clamp(21px, 1.8vw, 27px);
+  line-height: 1;
 }
 
 .summaryPills .warn b {
@@ -1449,23 +1461,37 @@ select:focus-visible {
 
 .scenarioNavigator {
   grid-area: nav;
+  background: #ffffff;
+}
+
+.scenarioNavigator .panelHeading {
+  align-items: stretch;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.scenarioNavigator .secondaryButton {
+  width: 100%;
+  justify-content: center;
 }
 
 .scenarioEditor {
   grid-area: editor;
   min-width: 0;
+  background: #f8fbfe;
 }
 
 .readinessPanel {
   grid-area: ready;
   display: grid;
   align-content: start;
-  gap: var(--space-3);
+  gap: var(--space-4);
   background: #f8fbfe;
 }
 
 .readinessPanel strong {
-  font-size: 24px;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.05;
 }
 
 .readinessPanel p {
@@ -1473,9 +1499,37 @@ select:focus-visible {
   line-height: 1.45;
 }
 
+.readinessChecklist {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.readinessChecklist span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 34px;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.readinessChecklist svg {
+  color: var(--green);
+}
+
+.readinessPanel .primaryButton,
+.executionBoard > .primaryButton {
+  width: 100%;
+  justify-content: center;
+}
+
 .scenarioList {
+  display: grid;
   max-height: 530px;
   overflow: auto;
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
 }
 
 .scenarioNavigator,
@@ -1488,29 +1542,40 @@ select:focus-visible {
 
 .scenarioRow {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  column-gap: var(--space-2);
+  row-gap: var(--space-2);
   align-items: center;
   width: 100%;
-  min-height: 70px;
-  padding: var(--space-3);
+  min-height: 76px;
+  padding: var(--space-3) var(--space-3) var(--space-4);
   color: var(--ink);
   background: #ffffff;
-  border: 1px solid var(--line-soft);
-  border-radius: 7px;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
   text-align: left;
 }
 
+.scenarioRow:first-child {
+  border-top: 0;
+}
+
+.scenarioRow:hover {
+  background: #fbfdff;
+}
+
 .scenarioRow.active {
-  background: var(--blue-soft);
-  border-color: #7abce3;
+  background: #f0f8fd;
+  box-shadow: inset 4px 0 0 var(--blue);
 }
 
 .scenarioId {
   display: inline-grid;
   place-items: center;
-  min-width: 64px;
-  height: 30px;
+  justify-self: start;
+  min-width: 66px;
+  height: 32px;
   color: var(--blue);
   background: #e2f0fa;
   border-radius: 6px;
@@ -1522,6 +1587,10 @@ select:focus-visible {
 .scenarioRow em {
   display: block;
   min-width: 0;
+}
+
+.scenarioRow > span:not(.scenarioId) {
+  grid-column: 1 / -1;
 }
 
 .scenarioRow strong {
@@ -1538,32 +1607,38 @@ select:focus-visible {
 .goodText,
 .warnText,
 .staleBadge {
+  padding: 5px 8px;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 900;
+  white-space: nowrap;
 }
 
 .goodText {
   color: var(--green);
+  background: var(--green-soft);
 }
 
 .warnText,
 .staleBadge {
   color: var(--amber);
+  background: var(--amber-soft);
 }
 
 .staleBadge {
-  grid-column: 3;
+  grid-column: auto;
 }
 
 .editorShell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 210px;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 240px);
   gap: var(--space-4);
 }
 
 .gherkinEditor {
-  min-height: 318px;
+  min-height: 348px;
   padding: var(--space-4);
+  background: #ffffff;
   font-family: var(--font-plex-mono), Consolas, monospace;
   font-size: 13px;
   line-height: 1.55;
@@ -1581,12 +1656,16 @@ select:focus-visible {
   align-items: flex-start;
   gap: var(--space-2);
   padding: var(--space-3);
-  color: var(--green);
-  background: var(--green-soft);
+  color: var(--navy);
+  background: #ffffff;
   border: 1px solid #b9dec7;
   border-radius: 7px;
   font-size: 12px;
   font-weight: 900;
+}
+
+.validationPanel svg {
+  color: var(--green);
 }
 
 .diffPanel {
@@ -1599,7 +1678,7 @@ select:focus-visible {
 .diffPanel div {
   min-width: 0;
   padding: var(--space-3);
-  background: var(--field);
+  background: #ffffff;
   border: 1px solid var(--line-soft);
   border-radius: 7px;
 }
@@ -1618,6 +1697,10 @@ select:focus-visible {
   gap: var(--space-4);
   align-items: start;
   margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: #ffffff;
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
 }
 
 .decisionButtons {
@@ -1641,7 +1724,17 @@ select:focus-visible {
 }
 
 .approvalScreen {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(360px, 0.82fr);
+  gap: clamp(16px, 1.8vw, 22px);
   align-items: start;
+}
+
+.approvalGate,
+.executionBoard,
+.reportSummary,
+.evidencePanel {
+  background: #f8fbfe;
 }
 
 .gateMetrics,
@@ -1653,12 +1746,14 @@ select:focus-visible {
 
 .gateMetrics span {
   display: grid;
+  align-content: center;
   gap: 2px;
+  min-height: 86px;
   padding: var(--space-4);
   color: var(--muted);
-  background: var(--field);
+  background: #ffffff;
   border: 1px solid var(--line-soft);
-  border-radius: 7px;
+  border-radius: 6px;
   font-size: 12px;
 }
 
@@ -1668,7 +1763,9 @@ select:focus-visible {
 }
 
 .packageChecklist {
-  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
 }
 
 .packageChecklist div {
@@ -1693,7 +1790,7 @@ select:focus-visible {
   margin-top: var(--space-5);
   padding: var(--space-4);
   color: var(--navy);
-  background: var(--amber-soft);
+  background: #fffdf3;
   border: 1px solid #e5c970;
   border-radius: 7px;
   font-size: 14px;
@@ -1709,8 +1806,9 @@ select:focus-visible {
 }
 
 .actionRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-3);
-  flex-wrap: wrap;
   margin-top: var(--space-5);
 }
 
@@ -1719,6 +1817,8 @@ select:focus-visible {
 }
 
 .executionList {
+  display: grid;
+  gap: var(--space-3);
   max-height: 430px;
   margin-top: var(--space-4);
   overflow-y: auto;
@@ -1726,9 +1826,10 @@ select:focus-visible {
 }
 
 .executionRow {
+  display: flex;
   gap: var(--space-3);
-  min-height: 76px;
-  padding: var(--space-3);
+  min-height: 78px;
+  padding: var(--space-4);
   background: #ffffff;
   border: 1px solid var(--line-soft);
   border-radius: 7px;
@@ -1788,11 +1889,15 @@ select:focus-visible {
 }
 
 .reportsScreen {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(360px, 0.9fr);
+  gap: clamp(16px, 1.8vw, 22px);
   align-items: start;
 }
 
 .reportMetrics {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: var(--space-4);
 }
 
 .reportMetrics .met {
@@ -1805,6 +1910,7 @@ select:focus-visible {
   overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 7px;
+  background: #ffffff;
 }
 
 .resultHeader,
@@ -1875,6 +1981,8 @@ select:focus-visible {
 }
 
 .evidenceObjects {
+  display: grid;
+  gap: var(--space-3);
   max-height: 430px;
   margin-top: var(--space-4);
   overflow-y: auto;
@@ -1888,7 +1996,7 @@ select:focus-visible {
   row-gap: 2px;
   align-items: center;
   padding: var(--space-4);
-  background: var(--field);
+  background: #ffffff;
   border: 1px solid var(--line-soft);
   border-radius: 7px;
 }
@@ -2021,7 +2129,7 @@ select:focus-visible {
 
   .reviewSummary {
     align-items: flex-start;
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .appHeader {
@@ -2088,6 +2196,7 @@ select:focus-visible {
     padding-right: 0;
   }
 
+  .summaryPills,
   .reportMetrics,
   .gateMetrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2186,9 +2295,16 @@ select:focus-visible {
   }
 
   .dropZone,
-  .documentRow,
-  .executionRow {
+  .documentRow {
     grid-template-columns: 1fr;
+  }
+
+  .scenarioRow {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .scenarioRow small {
+    justify-self: start;
   }
 
   .documentRow {
@@ -2232,11 +2348,37 @@ select:focus-visible {
     min-width: 0;
   }
 
+  .summaryPills,
   .reportMetrics,
   .gateMetrics,
   .diffPanel,
-  .runStats {
+  .runStats,
+  .actionRow {
     grid-template-columns: 1fr;
+  }
+
+  .resultTable {
+    overflow: visible;
+  }
+
+  .resultHeader {
+    display: none;
+  }
+
+  .resultRow {
+    grid-template-columns: 1fr;
+    min-width: 0;
+    padding: var(--space-3);
+  }
+
+  .resultRow span {
+    padding: 3px 0;
+    border-right: 0;
+  }
+
+  .resultRow span:first-child {
+    color: var(--navy);
+    font-weight: 900;
   }
 }
 
