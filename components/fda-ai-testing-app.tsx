@@ -557,24 +557,41 @@ export function FdaAiTestingApp() {
             Additional context (optional)
             <textarea value={context} onChange={(event) => setContext(event.target.value)} />
           </label>
-          <div className="consoleBlock">
-            <div>
-              <TerminalSquare size={17} />
-              Gemini adapter ready
-            </div>
-            {isGenerating ? (
+          <div className="generationLaunchPanel">
+            <span className="eyebrow">Launch readiness</span>
+            <div className="generationChecklist" aria-label="Agent 1 preflight checks">
               <span>
-                <RefreshCw className="spin" size={15} />
-                Generating scenarios, coverage map, and requirement links...
+                <CheckCircle2 size={15} />
+                Gherkin grammar validation
               </span>
-            ) : (
-              <span>Waiting for reviewer to start the generation job.</span>
-            )}
+              <span>
+                <Layers3 size={15} />
+                Coverage and trace map
+              </span>
+              <span>
+                <LockKeyhole size={15} />
+                FDA workspace execution
+              </span>
+            </div>
+            <div className="consoleBlock generationStatus">
+              <div>
+                <TerminalSquare size={17} />
+                Gemini adapter ready
+              </div>
+              {isGenerating ? (
+                <span>
+                  <RefreshCw className="spin" size={15} />
+                  Generating scenarios, coverage map, and requirement links...
+                </span>
+              ) : (
+                <span>Waiting for reviewer to start the generation job.</span>
+              )}
+            </div>
+            <button className="primaryButton" type="button" disabled={!canGenerate || isGenerating} onClick={startGeneration}>
+              {isGenerating ? <RefreshCw className="spin" size={17} /> : <Sparkles size={17} />}
+              Generate scenarios
+            </button>
           </div>
-          <button className="primaryButton" type="button" disabled={!canGenerate || isGenerating} onClick={startGeneration}>
-            {isGenerating ? <RefreshCw className="spin" size={17} /> : <Sparkles size={17} />}
-            Generate scenarios
-          </button>
         </section>
       </div>
     );
