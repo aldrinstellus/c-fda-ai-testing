@@ -121,6 +121,9 @@ export function FdaAiTestingApp() {
     generatedScenarios.find((scenario) => scenario.id === selectedScenarioId) ?? generatedScenarios[0];
   const activeStageConfig = workflowStages.find((stage) => stage.id === activeStage) ?? workflowStages[0];
   const stagedDocuments = sourceDocuments.filter((document) => stagedDocumentNames.has(document.name));
+  const readyDocumentCount = stagedDocuments.filter(
+    (document) => document.status === "Parsed" || document.status === "Indexed"
+  ).length;
   const selectedFeatureCount = selectedFeatures.size;
   const approvedCount = Object.values(decisions).filter((decision) => decision.status === "Approved").length;
   const blockedDecisionCount = Object.values(decisions).filter((decision) => decision.status !== "Approved").length;
@@ -362,7 +365,9 @@ export function FdaAiTestingApp() {
         <section className="workPanel sourcePanel">
           <div className="panelHeading">
             <div className="triggerStepHeader">
-              <span className="triggerStepNumber">01</span>
+              <span className="triggerStepNumber">
+                <UploadCloud size={17} />
+              </span>
               <div>
                 <span className="eyebrow">Source package</span>
                 <h3>Ingest controlled requirements</h3>
@@ -387,81 +392,105 @@ export function FdaAiTestingApp() {
             </div>
           </div>
 
-          <div
-            className="dropZone"
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => {
-              event.preventDefault();
-              setStagedDocumentNames(new Set(sourceDocuments.map((document) => document.name)));
-              addToast("success", "Source package staged for Agent 1 parsing.");
-            }}
-          >
-            <UploadCloud size={30} />
-            <div>
-              <strong>Drop requirement sources</strong>
-              <span>PDF PRDs, Markdown, structured exports, Confluence pages, and HTML help articles.</span>
+          <div className="sourceWorkspace">
+            <div
+              className="dropZone"
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                setStagedDocumentNames(new Set(sourceDocuments.map((document) => document.name)));
+                addToast("success", "Source package staged for Agent 1 parsing.");
+              }}
+            >
+              <UploadCloud size={30} />
+              <div>
+                <strong>Drop requirement sources</strong>
+                <span>PDF PRDs, Markdown, structured exports, Confluence pages, and HTML help articles.</span>
+              </div>
+              <label className="secondaryButton fileButton">
+                <FolderOpen size={16} />
+                Browse
+                <input
+                  className="fileInput"
+                  type="file"
+                  multiple
+                  onChange={(event) => handleSourceSelection(event.currentTarget.files)}
+                />
+              </label>
             </div>
-            <label className="secondaryButton fileButton">
-              <FolderOpen size={16} />
-              Browse
-              <input
-                className="fileInput"
-                type="file"
-                multiple
-                onChange={(event) => handleSourceSelection(event.currentTarget.files)}
-              />
-            </label>
-          </div>
 
-          <div className="documentList">
-            {stagedDocuments.length === 0 && (
-              <div className="emptySourceState">
-                <FileText size={18} />
+            <div className="fileQueue">
+              <div className="fileQueueHeader">
                 <div>
-                  <strong>No source files staged</strong>
-                  <span>Upload a supported source package before Agent 1 can generate tests.</span>
+                  <span className="eyebrow">File queue</span>
+                  <strong>{stagedDocuments.length} staged sources</strong>
                 </div>
+                <span className={cls("statusChip", readyDocumentCount > 0 && "good")}>
+                  {readyDocumentCount} ready
+                </span>
               </div>
-            )}
-            {stagedDocuments.map((document) => (
-              <div className="documentRow" key={document.name}>
-                <FileText size={18} />
-                <div>
-                  <strong>{document.name}</strong>
-                  <span>
-                    {document.kind} / {document.size}
-                  </span>
-                  <div className="progressTrack" aria-label={`${document.name} ${document.progress}% parsed`}>
-                    <i style={{ width: `${document.progress}%` }} />
+
+              <div className="documentList" aria-label="Staged source files">
+                {stagedDocuments.length === 0 && (
+                  <div className="emptySourceState">
+                    <FileText size={18} />
+                    <div>
+                      <strong>No source files staged</strong>
+                      <span>Upload a supported source package before Agent 1 can generate tests.</span>
+                    </div>
                   </div>
-                </div>
-                <em className={cls("statusChip", document.status === "Parsed" || document.status === "Indexed" ? "good" : "neutral")}>
-                  {document.status}
-                </em>
-                <button
-                  className="iconButton"
-                  type="button"
-                  aria-label={`Remove ${document.name}`}
-                  onClick={() => {
-                    setStagedDocumentNames((current) => {
-                      const next = new Set(current);
-                      next.delete(document.name);
-                      return next;
-                    });
-                    addToast("info", `${document.name} removed from this source package.`);
-                  }}
-                >
-                  <Trash2 size={16} />
-                </button>
+                )}
+                {stagedDocuments.map((document) => (
+                  <div className="documentRow" key={document.name}>
+                    <FileText size={18} />
+                    <div className="documentMeta">
+                      <strong>{document.name}</strong>
+                      <span>
+                        {document.kind} / {document.size}
+                      </span>
+                    </div>
+                    <div className="documentProgress">
+                      <span>{document.progress}% parsed</span>
+                      <div className="progressTrack" aria-label={`${document.name} ${document.progress}% parsed`}>
+                        <i style={{ width: `${document.progress}%` }} />
+                      </div>
+                    </div>
+                    <em
+                      className={cls(
+                        "statusChip",
+                        document.status === "Parsed" || document.status === "Indexed" ? "good" : "neutral"
+                      )}
+                    >
+                      {document.status}
+                    </em>
+                    <button
+                      className="iconButton"
+                      type="button"
+                      aria-label={`Remove ${document.name}`}
+                      onClick={() => {
+                        setStagedDocumentNames((current) => {
+                          const next = new Set(current);
+                          next.delete(document.name);
+                          return next;
+                        });
+                        addToast("info", `${document.name} removed from this source package.`);
+                      }}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </section>
 
         <section className="workPanel scopePanel">
           <div className="panelHeading">
             <div className="triggerStepHeader">
-              <span className="triggerStepNumber">02</span>
+              <span className="triggerStepNumber">
+                <Layers3 size={17} />
+              </span>
               <div>
                 <span className="eyebrow">Feature scope</span>
                 <h3>{selectedFeatureCount} selected for generation</h3>
@@ -514,7 +543,9 @@ export function FdaAiTestingApp() {
         <section className="generationDock">
           <div className="generationSummary">
             <div className="triggerStepHeader">
-              <span className="triggerStepNumber">03</span>
+              <span className="triggerStepNumber">
+                <Sparkles size={17} />
+              </span>
               <div>
                 <span className="eyebrow">Generation job</span>
                 <h3>Agent 1 preflight</h3>
