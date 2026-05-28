@@ -705,6 +705,11 @@ select:focus-visible {
     max-height: clamp(300px, 44vh, 530px);
   }
 
+  .appShell:not(.signedOutShell) .reviewScreen .scenarioList {
+    max-height: none;
+    overflow: visible;
+  }
+
   .appShell:not(.signedOutShell) .featureList {
     max-height: clamp(300px, 38vh, 360px);
   }
@@ -1486,10 +1491,16 @@ select:focus-visible {
 .readinessPanel {
   grid-area: ready;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.8fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr) max-content;
   align-items: center;
-  gap: var(--space-4);
+  gap: clamp(16px, 2vw, 28px);
   background: #f8fbfe;
+}
+
+.readinessCopy {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
 .readinessPanel strong {
@@ -1545,13 +1556,13 @@ select:focus-visible {
 
 .scenarioRow {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
-  column-gap: var(--space-3);
-  row-gap: var(--space-2);
+  grid-template-columns: minmax(86px, 0.18fr) minmax(0, 1fr) minmax(280px, 0.48fr);
+  column-gap: var(--space-4);
+  row-gap: var(--space-3);
   align-items: center;
   width: 100%;
-  min-height: 66px;
-  padding: var(--space-3) var(--space-4);
+  min-height: 78px;
+  padding: var(--space-4);
   color: var(--ink);
   background: #ffffff;
   border: 0;
@@ -1573,6 +1584,13 @@ select:focus-visible {
   box-shadow: inset 4px 0 0 var(--blue);
 }
 
+.scenarioIdentity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
 .scenarioId {
   display: inline-grid;
   place-items: center;
@@ -1586,26 +1604,71 @@ select:focus-visible {
   font-weight: 900;
 }
 
-.scenarioRow strong,
-.scenarioRow em {
-  display: block;
+.scenarioDecisionDot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  background: var(--amber);
+  border-radius: 999px;
+  box-shadow: 0 0 0 4px var(--amber-soft);
+}
+
+.scenarioDecisionDot.approved {
+  background: var(--green);
+  box-shadow: 0 0 0 4px var(--green-soft);
+}
+
+.scenarioDecisionDot.rejected {
+  background: var(--red);
+  box-shadow: 0 0 0 4px var(--red-soft);
+}
+
+.scenarioCopy {
+  display: grid;
+  gap: var(--space-2);
   min-width: 0;
 }
 
-.scenarioRow strong {
+.scenarioCopy strong {
   font-size: 14px;
+  line-height: 1.25;
 }
 
-.scenarioRow em {
-  margin-top: 3px;
+.scenarioMetaLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.scenarioMetaLine em {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 var(--space-2);
   color: var(--muted);
+  background: #f5f9fc;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
   font-size: 12px;
   font-style: normal;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scenarioSignals {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .goodText,
 .warnText,
-.staleBadge {
+.staleBadge,
+.decisionChip {
   padding: 5px 8px;
   border-radius: 999px;
   font-size: 12px;
@@ -1624,8 +1687,64 @@ select:focus-visible {
   background: var(--amber-soft);
 }
 
+.decisionChip {
+  color: var(--navy);
+  background: #edf3f8;
+}
+
+.decisionChip.approved {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.decisionChip.revision {
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.decisionChip.rejected {
+  color: var(--red);
+  background: var(--red-soft);
+}
+
 .staleBadge {
   grid-column: auto;
+}
+
+.selectedScenarioMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.selectedScenarioMeta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 var(--space-3);
+  color: var(--navy);
+  background: #ffffff;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.selectedScenarioMeta svg {
+  color: var(--blue);
+}
+
+.selectedScenarioMeta .warn {
+  color: var(--amber);
+  background: var(--amber-soft);
+  border-color: #ead68b;
+}
+
+.selectedScenarioMeta .warn svg {
+  color: var(--amber);
 }
 
 .editorShell {
@@ -1692,8 +1811,8 @@ select:focus-visible {
 
 .decisionPanel {
   display: grid;
-  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
-  gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
   align-items: start;
   margin-top: var(--space-4);
   padding: var(--space-4);
@@ -1702,14 +1821,60 @@ select:focus-visible {
   border-radius: 7px;
 }
 
+.decisionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.decisionHeader strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.decisionState {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 var(--space-3);
+  color: var(--amber);
+  background: var(--amber-soft);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.decisionState.approved {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.decisionState.rejected {
+  color: var(--red);
+  background: var(--red-soft);
+}
+
+.decisionWork {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .decisionButtons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-top: var(--space-2);
+  margin-top: 0;
 }
 
 .decisionButton {
-  min-height: 40px;
+  justify-content: center;
+  min-height: 44px;
   padding: 0 var(--space-3);
   color: var(--navy);
   background: #ffffff;
@@ -1720,6 +1885,10 @@ select:focus-visible {
   color: #ffffff;
   background: var(--navy);
   border-color: var(--navy);
+}
+
+.decisionComment {
+  margin-top: 0;
 }
 
 .approvalScreen {
@@ -2284,6 +2453,19 @@ select:focus-visible {
     white-space: nowrap;
   }
 
+  .scenarioEditor .panelHeading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scenarioEditor .secondaryButton {
+    align-self: flex-start;
+  }
+
+  .selectedScenarioMeta span {
+    white-space: normal;
+  }
+
   .reportSummary .panelHeading {
     align-items: stretch;
     flex-direction: column;
@@ -2322,11 +2504,30 @@ select:focus-visible {
   }
 
   .scenarioRow {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 
-  .scenarioRow small {
-    justify-self: start;
+  .scenarioIdentity,
+  .scenarioSignals {
+    justify-content: flex-start;
+  }
+
+  .scenarioIdentity {
+    width: 100%;
+  }
+
+  .decisionHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .decisionState {
+    align-self: flex-start;
+  }
+
+  .decisionButtons {
+    grid-template-columns: 1fr;
   }
 
   .documentRow {

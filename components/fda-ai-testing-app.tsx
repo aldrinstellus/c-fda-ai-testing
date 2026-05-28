@@ -648,35 +648,84 @@ export function FdaAiTestingApp() {
           </div>
 
           <div className="scenarioList" role="list">
-            {generatedScenarios.map((scenario) => (
-              <button
-                className={cls("scenarioRow", selectedScenario.id === scenario.id && "active")}
-                key={scenario.id}
-                type="button"
-                aria-pressed={selectedScenario.id === scenario.id}
-                onClick={() => setSelectedScenarioId(scenario.id)}
-              >
-                <span className="scenarioId">{scenario.id}</span>
-                <span>
-                  <strong>{scenario.title}</strong>
-                  <em>
-                    {scenario.feature} / {scenario.requirement}
-                  </em>
-                </span>
-                <small className={scenario.coverage === "Covered" ? "goodText" : "warnText"}>{scenario.coverage}</small>
-                {scenario.stale && <small className="staleBadge">Stale</small>}
-              </button>
-            ))}
+            {generatedScenarios.map((scenario) => {
+              const scenarioDecision = decisions[scenario.id];
+              const isActiveScenario = selectedScenario.id === scenario.id;
+
+              return (
+                <button
+                  className={cls("scenarioRow", isActiveScenario && "active")}
+                  key={scenario.id}
+                  type="button"
+                  aria-pressed={isActiveScenario}
+                  onClick={() => setSelectedScenarioId(scenario.id)}
+                >
+                  <span className="scenarioIdentity">
+                    <span className="scenarioId">{scenario.id}</span>
+                    <span
+                      className={cls(
+                        "scenarioDecisionDot",
+                        scenarioDecision.status === "Approved" && "approved",
+                        scenarioDecision.status === "Needs Revision" && "revision",
+                        scenarioDecision.status === "Rejected" && "rejected"
+                      )}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span className="scenarioCopy">
+                    <strong>{scenario.title}</strong>
+                    <span className="scenarioMetaLine">
+                      <em>{scenario.feature}</em>
+                      <em>Requirement {scenario.requirement}</em>
+                    </span>
+                  </span>
+                  <span className="scenarioSignals">
+                    <small className={scenario.coverage === "Covered" ? "goodText" : "warnText"}>
+                      {scenario.coverage}
+                    </small>
+                    <small
+                      className={cls(
+                        "decisionChip",
+                        scenarioDecision.status === "Approved" && "approved",
+                        scenarioDecision.status === "Needs Revision" && "revision",
+                        scenarioDecision.status === "Rejected" && "rejected"
+                      )}
+                    >
+                      {scenarioDecision.status}
+                    </small>
+                    {scenario.stale && <small className="staleBadge">Stale</small>}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </section>
 
         <section className="scenarioEditor">
           <div className="panelHeading">
             <div>
-              <span className="eyebrow">
-                {selectedScenario.requirement} / confidence {selectedScenario.confidence}%
-              </span>
+              <span className="eyebrow">Selected scenario</span>
               <h3>{selectedScenario.title}</h3>
+              <div className="selectedScenarioMeta" aria-label="Selected scenario metadata">
+                <span>
+                  <FileCheck2 size={14} />
+                  Requirement {selectedScenario.requirement}
+                </span>
+                <span>
+                  <Gauge size={14} />
+                  {selectedScenario.confidence}% confidence
+                </span>
+                <span>
+                  <History size={14} />
+                  {selectedScenario.impact} impact
+                </span>
+                {selectedScenario.stale && (
+                  <span className="warn">
+                    <AlertTriangle size={14} />
+                    Stale source
+                  </span>
+                )}
+              </div>
             </div>
             <button className="secondaryButton" type="button" disabled={!hasEdits} onClick={resetScenarioDraft}>
               <RotateCcw size={16} />
@@ -724,8 +773,23 @@ export function FdaAiTestingApp() {
           </div>
 
           <div className="decisionPanel">
-            <div>
-              <span className="eyebrow">Decision</span>
+            <div className="decisionHeader">
+              <div>
+                <span className="eyebrow">Decision</span>
+                <strong>Reviewer disposition</strong>
+              </div>
+              <span
+                className={cls(
+                  "decisionState",
+                  currentDecision.status === "Approved" && "approved",
+                  currentDecision.status === "Needs Revision" && "revision",
+                  currentDecision.status === "Rejected" && "rejected"
+                )}
+              >
+                {currentDecision.status}
+              </span>
+            </div>
+            <div className="decisionWork">
               <div className="decisionButtons" role="group" aria-label="Scenario decision">
                 {scenarioStatusOptions.map((option) => (
                   <button
@@ -741,22 +805,26 @@ export function FdaAiTestingApp() {
                   </button>
                 ))}
               </div>
+              <label className="fieldStack decisionComment">
+                Reviewer comment {currentDecision.status !== "Approved" && <b>required</b>}
+                <input
+                  value={currentDecision.comment}
+                  onChange={(event) => updateDecisionComment(selectedScenario.id, event.target.value)}
+                  placeholder="Add rationale for revision or rejection"
+                />
+              </label>
             </div>
-            <label className="fieldStack">
-              Reviewer comment {currentDecision.status !== "Approved" && <b>required</b>}
-              <input
-                value={currentDecision.comment}
-                onChange={(event) => updateDecisionComment(selectedScenario.id, event.target.value)}
-                placeholder="Add rationale for revision or rejection"
-              />
-            </label>
           </div>
         </section>
 
         <aside className="readinessPanel">
-          <span className="eyebrow">Approval readiness</span>
-          <strong>{approvedCount} approved scenarios</strong>
-          <p>{blockedDecisionCount} scenarios are held for revision or rejection. Comment gaps: {commentMissingCount}.</p>
+          <div className="readinessCopy">
+            <span className="eyebrow">Approval readiness</span>
+            <strong>{approvedCount} approved scenarios</strong>
+            <p>
+              Pending decisions: {blockedDecisionCount}. Comment gaps: {commentMissingCount}.
+            </p>
+          </div>
           <div className="readinessChecklist">
             <span>
               <CheckCircle2 size={15} />
