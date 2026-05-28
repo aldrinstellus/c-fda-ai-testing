@@ -131,6 +131,8 @@ export function FdaAiTestingApp() {
   const commentMissingCount = Object.values(decisions).filter(
     (decision) => decision.status !== "Approved" && decision.comment.trim().length === 0
   ).length;
+  const scenarioCount = generatedScenarios.length;
+  const scenarioApprovalPercent = Math.round((approvedCount / scenarioCount) * 100);
   const canGenerate = selectedFeatureCount > 0 && stagedDocuments.some((document) => document.progress > 0);
   const canExecute = approvedCount > 0 && commentMissingCount === 0 && approvalChecked;
   const coverage = 84;
@@ -817,28 +819,72 @@ export function FdaAiTestingApp() {
           </div>
         </section>
 
-        <aside className="readinessPanel">
-          <div className="readinessCopy">
-            <span className="eyebrow">Approval readiness</span>
-            <strong>{approvedCount} approved scenarios</strong>
-            <p>
-              Pending decisions: {blockedDecisionCount}. Comment gaps: {commentMissingCount}.
-            </p>
-          </div>
-          <div className="readinessChecklist">
-            <span>
-              <CheckCircle2 size={15} />
-              Edited session copy retained
+        <aside className={cls("readinessPanel", commentMissingCount === 0 ? "ready" : "attention")}>
+          <div className="readinessStatus">
+            <span className="readinessIcon" aria-hidden="true">
+              <ShieldCheck size={20} />
             </span>
-            <span>
-              <FileCheck2 size={15} />
-              Reviewer decisions captured
-            </span>
+            <div className="readinessCopy">
+              <span className="eyebrow">Approval readiness</span>
+              <strong>{commentMissingCount === 0 ? "Ready for approval gate" : "Review gaps need attention"}</strong>
+              <p>
+                <b>{approvedCount} approved scenarios.</b> Pending decisions: {blockedDecisionCount}. Comment gaps:{" "}
+                {commentMissingCount}.
+              </p>
+            </div>
           </div>
-          <button className="primaryButton" type="button" disabled={approvedCount === 0} onClick={() => setActiveStage("approve")}>
-            <ShieldCheck size={17} />
-            Continue to approval gate
-          </button>
+
+          <div className="readinessProgress" aria-label="Approval package progress">
+            <div className="readinessProgressHeader">
+              <span>
+                {approvedCount} of {scenarioCount} approved
+              </span>
+              <b>{scenarioApprovalPercent}%</b>
+            </div>
+            <div className="readinessTrack" aria-hidden="true">
+              <span style={{ width: `${scenarioApprovalPercent}%` }} />
+            </div>
+            <div className="readinessStats">
+              <span>
+                <b>{blockedDecisionCount}</b>
+                pending
+              </span>
+              <span>
+                <b>{commentMissingCount}</b>
+                comment gaps
+              </span>
+              <span>
+                <b>100%</b>
+                audit trace
+              </span>
+            </div>
+          </div>
+
+          <div className="readinessActionPanel">
+            <div className="readinessChecklist">
+              <span>
+                <CheckCircle2 size={15} />
+                Edited copies saved
+              </span>
+              <span>
+                <FileCheck2 size={15} />
+                Decisions captured
+              </span>
+              <span className={commentMissingCount === 0 ? undefined : "warn"}>
+                {commentMissingCount === 0 ? <CheckCircle2 size={15} /> : <AlertTriangle size={15} />}
+                Required comments complete
+              </span>
+            </div>
+            <button
+              className="primaryButton"
+              type="button"
+              disabled={approvedCount === 0}
+              onClick={() => setActiveStage("approve")}
+            >
+              <ShieldCheck size={17} />
+              Continue to approval gate
+            </button>
+          </div>
         </aside>
       </div>
     );

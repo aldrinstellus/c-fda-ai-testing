@@ -1491,26 +1491,132 @@ select:focus-visible {
 .readinessPanel {
   grid-area: ready;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr) max-content;
-  align-items: center;
-  gap: clamp(16px, 2vw, 28px);
-  background: #f8fbfe;
+  grid-template-columns: minmax(340px, 1fr) minmax(260px, 0.72fr) minmax(280px, 0.72fr);
+  align-items: stretch;
+  gap: clamp(18px, 2.2vw, 30px);
+  background:
+    linear-gradient(90deg, rgba(232, 244, 252, 0.78), rgba(255, 255, 255, 0.94)),
+    #f8fbfe;
+}
+
+.readinessPanel.ready {
+  border-color: #b9dec7;
+}
+
+.readinessPanel.attention {
+  border-color: #ead68b;
+}
+
+.readinessStatus {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-content: start;
+  min-width: 0;
+}
+
+.readinessIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: var(--green);
+  background: var(--green-soft);
+  border: 1px solid #b9dec7;
+  border-radius: 8px;
 }
 
 .readinessCopy {
   display: grid;
-  gap: var(--space-2);
+  gap: 7px;
   min-width: 0;
 }
 
 .readinessPanel strong {
-  font-size: clamp(22px, 2vw, 28px);
+  font-size: clamp(20px, 1.55vw, 25px);
   line-height: 1.05;
 }
 
 .readinessPanel p {
   color: var(--muted);
+  font-size: 13px;
   line-height: 1.45;
+}
+
+.readinessPanel p b {
+  color: var(--ink);
+}
+
+.readinessProgress {
+  display: grid;
+  align-content: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: 0 clamp(16px, 2vw, 26px);
+  border-left: 1px solid var(--line-soft);
+  border-right: 1px solid var(--line-soft);
+}
+
+.readinessProgressHeader,
+.readinessStats {
+  display: flex;
+  align-items: center;
+}
+
+.readinessProgressHeader {
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.readinessProgressHeader b {
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.readinessTrack {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  background: #dceaf4;
+  border-radius: 999px;
+}
+
+.readinessTrack span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), #1f7a43);
+  border-radius: inherit;
+}
+
+.readinessStats {
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.readinessStats span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.readinessStats b {
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.readinessActionPanel {
+  display: grid;
+  align-content: space-between;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
 .readinessChecklist {
@@ -1530,6 +1636,14 @@ select:focus-visible {
 
 .readinessChecklist svg {
   color: var(--green);
+}
+
+.readinessChecklist .warn {
+  color: var(--amber);
+}
+
+.readinessChecklist .warn svg {
+  color: var(--amber);
 }
 
 .readinessPanel .primaryButton,
@@ -2347,6 +2461,14 @@ select:focus-visible {
   .readinessPanel,
   .decisionPanel {
     grid-template-columns: 1fr;
+  }
+
+  .readinessProgress {
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--line-soft);
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--line-soft);
   }
 
   .generationDock {
