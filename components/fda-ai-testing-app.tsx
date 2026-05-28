@@ -31,7 +31,6 @@ import {
   TerminalSquare,
   Trash2,
   UploadCloud,
-  X,
   XCircle
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -875,21 +874,25 @@ export function FdaAiTestingApp() {
             width={545}
             height={114}
           />
-          <div>
-            <p>Center for Drug Evaluation and Research</p>
+          <span className="brandDivider" aria-hidden="true" />
+          <div className="brandCopy">
             <h1>AI Agentic Testing</h1>
+            <p>Center for Drug Evaluation and Research</p>
           </div>
         </div>
 
-        <div className="sessionBlock">
-          <span>AD</span>
-          <div>
-            <strong>Reviewer</strong>
-            <em>Run FDA-RUN-009</em>
+        <div className="headerMeta">
+          <span className="boundaryPill">
+            <ShieldCheck size={15} />
+            FDA workspace
+          </span>
+          <div className="sessionBlock" aria-label="Current reviewer">
+            <span>AD</span>
+            <div>
+              <strong>Reviewer</strong>
+              <em>FDA-RUN-009</em>
+            </div>
           </div>
-          <button className="iconButton inverse" type="button" aria-label="Log out" onClick={() => addToast("info", "Session cleared.")}>
-            <X size={16} />
-          </button>
         </div>
       </header>
 

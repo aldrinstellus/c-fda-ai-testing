@@ -109,15 +109,17 @@ select:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
-  padding: 18px clamp(16px, 3vw, 36px);
+  gap: var(--space-5);
+  min-height: 68px;
+  padding: 10px clamp(16px, 3vw, 36px);
   color: #f4f9ff;
-  background: var(--navy);
+  background: linear-gradient(90deg, #092f53, var(--navy));
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 16px 36px rgba(7, 29, 51, 0.18);
+  box-shadow: 0 10px 24px rgba(7, 29, 51, 0.12);
 }
 
 .brandBlock,
+.headerMeta,
 .sessionBlock,
 .workflowStep,
 .stageStatus,
@@ -139,16 +141,23 @@ select:focus-visible {
 
 .brandBlock {
   min-width: 0;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .fdaMark {
   display: block;
   flex: 0 0 auto;
-  width: clamp(138px, 10vw, 180px);
-  height: 46px;
+  width: clamp(128px, 9vw, 160px);
+  height: 34px;
   object-fit: contain;
   object-position: left center;
+}
+
+.brandDivider {
+  width: 1px;
+  height: 34px;
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.24);
 }
 
 .brandBlock p,
@@ -167,28 +176,54 @@ select:focus-visible {
 }
 
 .brandBlock p {
-  color: #b9d7ed;
-  font-size: 12px;
+  margin-top: 2px;
+  color: #b7d3e8;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .brandBlock h1 {
-  margin-top: var(--space-1);
-  font-size: clamp(22px, 2.3vw, 32px);
-  line-height: 1.03;
+  font-size: clamp(19px, 1.5vw, 24px);
+  line-height: 1;
   letter-spacing: 0;
 }
 
-.sessionBlock {
+.headerMeta {
+  justify-content: flex-end;
   gap: var(--space-3);
   flex: 0 0 auto;
+}
+
+.boundaryPill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 34px;
+  padding: 0 var(--space-3);
+  color: #d9ecf8;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.sessionBlock {
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 5px 10px 5px 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
 }
 
 .sessionBlock > span {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 32px;
+  height: 32px;
   color: var(--navy);
   background: #eff7ff;
   border-radius: 999px;
@@ -201,12 +236,12 @@ select:focus-visible {
 }
 
 .sessionBlock strong {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .sessionBlock em {
   color: #c9e1f4;
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
 }
 
@@ -229,7 +264,7 @@ select:focus-visible {
 
 .workflowBar {
   position: sticky;
-  top: 83px;
+  top: 68px;
   z-index: 25;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1474,7 +1509,7 @@ select:focus-visible {
 
 @media (max-width: 1240px) {
   .workflowBar {
-    top: 83px;
+    top: 68px;
     overflow-x: auto;
     grid-template-columns: repeat(4, minmax(240px, 1fr));
   }
@@ -1493,19 +1528,29 @@ select:focus-visible {
 }
 
 @media (max-width: 960px) {
-  .appHeader,
   .stageIntro,
   .reviewSummary {
     align-items: flex-start;
     flex-direction: column;
   }
 
+  .appHeader {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .headerMeta {
+    justify-content: space-between;
+    width: 100%;
+  }
+
   .sessionBlock {
-    align-self: stretch;
+    align-self: auto;
   }
 
   .workflowBar {
-    top: 145px;
+    top: 110px;
     padding: 0;
   }
 
@@ -1547,11 +1592,39 @@ select:focus-visible {
 
   .brandBlock {
     align-items: flex-start;
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .fdaMark {
-    width: 148px;
+    width: 126px;
+    height: 31px;
+  }
+
+  .brandDivider {
+    height: 31px;
+  }
+
+  .brandBlock p {
+    display: none;
+  }
+
+  .brandBlock h1 {
+    font-size: 20px;
+    line-height: 1.05;
+  }
+
+  .boundaryPill {
+    min-height: 32px;
+    font-size: 11px;
+  }
+
+  .sessionBlock {
+    min-height: 38px;
+  }
+
+  .sessionBlock > span {
+    width: 30px;
+    height: 30px;
   }
 
   .workflowStep {
